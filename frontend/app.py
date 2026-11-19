@@ -106,15 +106,21 @@ if role == "Project Manager":
 
     with tab_upload:
         uploaded_file = st.file_uploader("Upload Granola or Wispr JSON file", type=["json"])
+        is_private_upload = st.checkbox("🔒 Mark this meeting as Private (PRD Feature 12: Private meetings are never read or stored)", value=False)
         if uploaded_file is not None:
             if st.button("🚀 Process Uploaded Transcript", type="primary"):
                 with st.spinner("LangGraph agent is analyzing transcript, querying Jira & GitHub, and drafting updates..."):
                     try:
                         data = json.load(uploaded_file)
+                        data["is_private"] = is_private_upload
                         res = requests.post(f"{API_BASE_URL}/upload_transcript", json=data, timeout=30)
                         if res.status_code == 200:
-                            st.success(f"Processing complete! {res.json().get('total_drafts_generated')} drafts generated.")
-                            st.rerun()
+                            resp_json = res.json()
+                            if resp_json.get("status") == "skipped":
+                                st.warning(resp_json.get("message"))
+                            else:
+                                st.success(f"Processing complete! {resp_json.get('total_drafts_generated')} drafts generated.")
+                                st.rerun()
                         else:
                             st.error(f"Backend error: {res.text}")
                     except Exception as e:
@@ -140,6 +146,24 @@ if role == "Project Manager":
     st.markdown("---")
     st.subheader("📋 Review Queue (Pending Project Manager Approval)")
     st.caption("Nothing is sent or written to Jira until approved. Strict traceability to exact spoken lines is enforced.")
+
+    # PRD Feature 10: Deadline Alerts Scan
+    all_current_drafts = fetch_drafts()
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    overdue_alerts = []
+    for d in all_current_drafts:
+        if d.get("type") == "action_item":
+            try:
+                p = json.loads(d["proposed_change"])
+                due = p.get("due_date")
+                if due and due != "MISSING" and due < today_str and d.get("status") != "approved":
+                    overdue_alerts.append((p.get("task"), p.get("owner"), due))
+            except Exception:
+                pass
+
+    if overdue_alerts:
+        for task, owner, due in overdue_alerts:
+            st.error(f"🚨 **Deadline Alert (PRD Feature 10):** Action Item *'{task}'* assigned to **{owner}** passed its due date ({due})! Notifying owner & PM.")
 
     col_filter1, col_filter2, col_action = st.columns([2, 2, 3])
     with col_filter1:

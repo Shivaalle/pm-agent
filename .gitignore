@@ -21,7 +21,12 @@ env/
 .idea/
 *.swp
 *.swo
+archive/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Database
+data/*.db
+data/agent.db

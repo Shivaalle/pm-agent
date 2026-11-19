@@ -1,0 +1,33 @@
+app:
+  name: "AI Project Manager Agent"
+  version: "1.0.0"
+  env: "development"
+
+models:
+  primary: "gemini-3-flash-preview"
+  backup: "gemini-3.5-flash-lite"
+  audio: "gemini-3.5-transcribe"
+  temperature: 0.1
+
+jira:
+  default_project_key: "KAN"
+  max_results: 25
+
+github:
+  per_page: 15
+
+project_baseline:
+  key: "KAN"
+  name: "AI Project Manager Platform"
+  agreed_scope:
+    - "User authentication via OAuth and JWT tokens"
+    - "Role-based access control (Admin, PM, Member, Sponsor)"
+    - "Core database schema and migrations for projects and tasks"
+    - "REST API endpoints for Jira and GitHub synchronization"
+    - "Streamlit web dashboard for draft review and progress tracking"
+  team_members:
+    - "Sarah (Project Manager)"
+    - "Alex (Backend Tech Lead)"
+    - "David (Frontend Engineer)"
+    - "Elena (DevOps / Infrastructure)"
+    - "Mark (Product Sponsor)"

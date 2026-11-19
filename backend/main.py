@@ -26,9 +26,10 @@ from backend.models import (
 from backend.agent import pm_agent_app
 from backend.mcp_servers import create_or_update_issue
 from backend.config import settings
+from backend.logger import get_logger, setup_logging
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("main_api")
+setup_logging()
+logger = get_logger("main_api")
 
 app = FastAPI(
     title="AI Project Manager Agent API",

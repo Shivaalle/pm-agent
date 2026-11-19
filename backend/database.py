@@ -4,6 +4,9 @@ from datetime import datetime
 from typing import List, Optional, Dict, Any
 from backend.config import settings
 from backend.models import MeetingDrafts, DraftRecord, HistoryRecord, ProjectContext
+from backend.logger import get_logger
+
+logger = get_logger("database")
 
 def get_db():
     """

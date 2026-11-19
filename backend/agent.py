@@ -9,8 +9,9 @@ from backend.config import settings
 from backend.models import MeetingDrafts
 from backend.database import get_project, save_drafts_from_llm
 from backend.mcp_servers import get_open_issues, get_recent_prs, get_commits
+from backend.logger import get_logger
 
-logger = logging.getLogger("pm_agent")
+logger = get_logger("agent")
 
 class AgentState(TypedDict):
     meeting_id: str

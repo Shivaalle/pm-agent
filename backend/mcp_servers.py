@@ -6,8 +6,9 @@ from typing import Dict, Any, List, Optional
 import httpx
 from mcp.server.mcpserver import MCPServer
 from backend.config import settings
+from backend.logger import get_logger
 
-logger = logging.getLogger("mcp_servers")
+logger = get_logger("mcp_servers")
 
 # Initialize MCP Servers
 jira_mcp = MCPServer("jira-connector")

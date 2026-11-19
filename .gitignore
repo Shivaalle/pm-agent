@@ -30,3 +30,7 @@ Thumbs.db
 # Database
 data/*.db
 data/agent.db
+
+# Logs
+logs/
+*.log

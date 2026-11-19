@@ -34,3 +34,5 @@ data/agent.db
 # Logs
 logs/
 *.log
+
+# Artifacts (keep docs/ tracked for architecture diagrams)

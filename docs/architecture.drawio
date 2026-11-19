@@ -1,418 +1,343 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1600" math="0" shadow="1">
+<mxGraphModel dx="2074" dy="1356" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1280" math="0" shadow="0">
   <root>
     <mxCell id="0" />
     <mxCell id="1" parent="0" />
 
-    <!-- ============================================================ -->
-    <!-- TITLE -->
-    <!-- ============================================================ -->
-    <mxCell id="title" value="AI Project Manager Agent — Full System Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
-      <mxGeometry x="400" y="20" width="1400" height="40" as="geometry" />
+    <!-- ======================================================================== -->
+    <!--  TITLE BAR                                                                -->
+    <!-- ======================================================================== -->
+    <mxCell id="title" value="AI Project Manager Agent — System Architecture &amp; Workflow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=22;fontStyle=1;fontColor=#1B1F3B;" vertex="1" parent="1">
+      <mxGeometry x="260" y="15" width="1400" height="40" as="geometry" />
     </mxCell>
 
-    <!-- ============================================================ -->
-    <!-- LAYER BACKGROUNDS -->
-    <!-- ============================================================ -->
-
-    <!-- Config Layer bg -->
-    <mxCell id="bg_config" value="⚙️ Configuration Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="40" y="80" width="280" height="230" as="geometry" />
+    <!-- ======================================================================== -->
+    <!--  ROW 1 — USERS  (y=80)                                                   -->
+    <!-- ======================================================================== -->
+    <mxCell id="user_pm" value="PM" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#0052CC;fontStyle=1;fontSize=11;fontColor=#0052CC;" vertex="1" parent="1">
+      <mxGeometry x="310" y="80" width="30" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="user_team" value="Team Member" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#36B37E;fontStyle=1;fontSize=11;fontColor=#36B37E;" vertex="1" parent="1">
+      <mxGeometry x="440" y="80" width="30" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="user_sponsor" value="Sponsor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FF8B00;fontStyle=1;fontSize=11;fontColor=#FF8B00;" vertex="1" parent="1">
+      <mxGeometry x="570" y="80" width="30" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="user_admin" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#6554C0;fontStyle=1;fontSize=11;fontColor=#6554C0;" vertex="1" parent="1">
+      <mxGeometry x="700" y="80" width="30" height="50" as="geometry" />
     </mxCell>
 
-    <!-- Ingestion Layer bg -->
-    <mxCell id="bg_ingestion" value="📥 Ingestion Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="360" y="80" width="300" height="230" as="geometry" />
+    <!-- ======================================================================== -->
+    <!--  ROW 2 — STREAMLIT FRONTEND  (y=200)                                     -->
+    <!-- ======================================================================== -->
+    <mxCell id="ui_swimlane" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DEEBFF;strokeColor=#4C9AFF;strokeWidth=2;opacity=40;" vertex="1" parent="1">
+      <mxGeometry x="160" y="195" width="690" height="100" as="geometry" />
+    </mxCell>
+    <mxCell id="ui_label" value="STREAMLIT UI  :8501" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontStyle=1;fontColor=#0052CC;" vertex="1" parent="1">
+      <mxGeometry x="170" y="197" width="160" height="20" as="geometry" />
     </mxCell>
 
-    <!-- LangGraph bg -->
-    <mxCell id="bg_langgraph" value="🧠 LangGraph State Machine" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="700" y="80" width="440" height="490" as="geometry" />
+    <mxCell id="v_pm" value="PM View&#xa;Review Queue · Deadline Alerts&#xa;Batch Approve · Private Toggle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0052CC;fontColor=#FFFFFF;fontSize=10;strokeColor=#003884;" vertex="1" parent="1">
+      <mxGeometry x="175" y="220" width="160" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="v_team" value="Team View&#xa;Filtered by member name&#xa;Own actions &amp; updates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#36B37E;fontColor=#FFFFFF;fontSize=10;strokeColor=#1B7D4B;" vertex="1" parent="1">
+      <mxGeometry x="345" y="220" width="160" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="v_sponsor" value="Sponsor View&#xa;Decisions · RAID · Scope&#xa;Read-only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF8B00;fontColor=#FFFFFF;fontSize=10;strokeColor=#B86200;" vertex="1" parent="1">
+      <mxGeometry x="515" y="220" width="150" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="v_admin" value="Admin View&#xa;Integrations · Audit Log" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6554C0;fontColor=#FFFFFF;fontSize=10;strokeColor=#403294;" vertex="1" parent="1">
+      <mxGeometry x="675" y="220" width="160" height="60" as="geometry" />
     </mxCell>
 
-    <!-- MCP Connectors bg -->
-    <mxCell id="bg_mcp" value="🔌 MCP Connectors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="1180" y="80" width="300" height="230" as="geometry" />
+    <!-- User → UI arrows -->
+    <mxCell id="a_u1" edge="1" source="user_pm" target="v_pm" style="rounded=1;strokeColor=#0052CC;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_u2" edge="1" source="user_team" target="v_team" style="rounded=1;strokeColor=#36B37E;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_u3" edge="1" source="user_sponsor" target="v_sponsor" style="rounded=1;strokeColor=#FF8B00;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_u4" edge="1" source="user_admin" target="v_admin" style="rounded=1;strokeColor=#6554C0;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <!-- ======================================================================== -->
+    <!--  ROW 3 — FASTAPI BACKEND  (y=360)                                        -->
+    <!-- ======================================================================== -->
+    <mxCell id="api_swimlane" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0B3;strokeColor=#FFC400;strokeWidth=2;opacity=40;" vertex="1" parent="1">
+      <mxGeometry x="160" y="355" width="690" height="130" as="geometry" />
+    </mxCell>
+    <mxCell id="api_label" value="FASTAPI BACKEND  :8000" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontStyle=1;fontColor=#B86200;" vertex="1" parent="1">
+      <mxGeometry x="170" y="357" width="200" height="20" as="geometry" />
     </mxCell>
 
-    <!-- External Systems bg -->
-    <mxCell id="bg_external" value="🌐 External Systems" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="1520" y="80" width="260" height="490" as="geometry" />
+    <mxCell id="rt_upload" value="POST&#xa;/upload_transcript&#xa;/upload_file" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE380;strokeColor=#FFC400;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="175" y="385" width="130" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="rt_drafts" value="GET  /drafts&#xa;POST /drafts/{id}/approve&#xa;POST /drafts/{id}/edit&#xa;POST /drafts/{id}/reject" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE380;strokeColor=#FFC400;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="320" y="380" width="190" height="65" as="geometry" />
+    </mxCell>
+    <mxCell id="rt_misc" value="GET  /&#xa;GET  /project&#xa;GET  /history" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE380;strokeColor=#FFC400;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="525" y="385" width="120" height="55" as="geometry" />
     </mxCell>
 
-    <!-- FastAPI bg -->
-    <mxCell id="bg_fastapi" value="🚀 FastAPI Backend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="360" y="360" width="300" height="490" as="geometry" />
+    <mxCell id="idemp" value="Idempotency&#xa;Guard" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ABF5D1;strokeColor=#36B37E;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="680" y="380" width="90" height="60" as="geometry" />
     </mxCell>
 
-    <!-- Database bg -->
-    <mxCell id="bg_db" value="🗄️ SQLite Database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#7b4fa6;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="700" y="620" width="440" height="230" as="geometry" />
+    <!-- Private meeting check diamond -->
+    <mxCell id="private_check" value="Private?&#xa;🔒" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFEBE6;strokeColor=#FF5630;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="175" y="455" width="80" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="discard_private" value="Discard&#xa;No DB write" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF5630;fontColor=#FFFFFF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="52" y="460" width="90" height="40" as="geometry" />
     </mxCell>
 
-    <!-- Frontend bg -->
-    <mxCell id="bg_frontend" value="🖥️ Streamlit Multi-Role Frontend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="40" y="600" width="280" height="490" as="geometry" />
+    <!-- UI → API arrows -->
+    <mxCell id="a_ui_up" edge="1" source="v_pm" target="rt_upload" style="rounded=1;strokeColor=#0052CC;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_ui_dr" edge="1" source="v_pm" target="rt_drafts" style="rounded=1;strokeColor=#0052CC;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_ui_mi" edge="1" source="v_admin" target="rt_misc" style="rounded=1;strokeColor=#6554C0;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <mxCell id="a_upld_priv" edge="1" source="rt_upload" target="private_check" style="rounded=1;strokeColor=#FF5630;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_priv_disc" edge="1" source="private_check" target="discard_private" style="rounded=1;strokeColor=#FF5630;dashed=1;" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="priv_yes_lbl" value="Yes" style="text;html=1;fontSize=9;fontStyle=2;fontColor=#FF5630;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="115" y="460" width="30" height="18" as="geometry" />
     </mxCell>
 
-    <!-- Logging bg -->
-    <mxCell id="bg_logging" value="📋 Logging System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4d6;strokeColor=#d04a02;fontSize=11;fontStyle=1;verticalAlign=top;opacity=60;" vertex="1" parent="1">
-      <mxGeometry x="1180" y="620" width="300" height="230" as="geometry" />
+    <!-- ======================================================================== -->
+    <!--  ROW 4 — LANGGRAPH AGENT PIPELINE  (y=560)                               -->
+    <!-- ======================================================================== -->
+    <mxCell id="lg_swimlane" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3FCEF;strokeColor=#57D9A3;strokeWidth=2;opacity=40;" vertex="1" parent="1">
+      <mxGeometry x="160" y="545" width="690" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="lg_label" value="LANGGRAPH AGENT PIPELINE  (agent.py)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontStyle=1;fontColor=#006644;" vertex="1" parent="1">
+      <mxGeometry x="170" y="547" width="300" height="20" as="geometry" />
     </mxCell>
 
-    <!-- ============================================================ -->
-    <!-- CONFIGURATION LAYER -->
-    <!-- ============================================================ -->
-
-    <mxCell id="env_file" value=".env&#xa;(Secrets Only)&#xa;─────────────&#xa;GEMINI_API_KEY&#xa;JIRA_BASE_URL&#xa;JIRA_EMAIL&#xa;JIRA_TOKEN&#xa;GITHUB_TOKEN&#xa;GITHUB_REPO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffef9f;strokeColor=#c7a800;fontSize=10;align=left;" vertex="1" parent="1">
-      <mxGeometry x="55" y="120" width="170" height="130" as="geometry" />
+    <mxCell id="lg_start" value="START" style="ellipse;whiteSpace=wrap;html=1;fillColor=#00875A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;strokeColor=#006644;" vertex="1" parent="1">
+      <mxGeometry x="175" y="580" width="70" height="35" as="geometry" />
     </mxCell>
-
-    <mxCell id="settings_yaml" value="settings.yaml&#xa;(App Params)&#xa;─────────────&#xa;Gemini models&#xa;Jira project key&#xa;Agreed scope&#xa;Team members&#xa;per_page, temp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffef9f;strokeColor=#c7a800;fontSize=10;align=left;" vertex="1" parent="1">
-      <mxGeometry x="55" y="265" width="170" height="130" as="geometry" />
+    <mxCell id="lg_n1" value="1. Fetch Context&#xa;Jira Issues + GitHub PRs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ABF5D1;strokeColor=#36B37E;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="270" y="572" width="150" height="50" as="geometry" />
     </mxCell>
-
-    <!-- loader.py -->
-    <mxCell id="loader" value="loader.py&#xa;(Singleton Settings)&#xa;@lru_cache&#xa;.env wins on conflict" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="240" y="175" width="130" height="80" as="geometry" />
+    <mxCell id="lg_n2" value="2. Draft &amp; Cross-Reference&#xa;Gemini LLM Extraction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ABF5D1;strokeColor=#36B37E;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="445" y="572" width="165" height="50" as="geometry" />
     </mxCell>
-
-    <mxCell id="e1" edge="1" source="env_file" target="loader" parent="1">
-      <mxGeometry relative="1" as="geometry" />
+    <mxCell id="lg_n3" value="3. Save Drafts&#xa;Source-Quote Filter → DB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ABF5D1;strokeColor=#36B37E;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="635" y="572" width="150" height="50" as="geometry" />
     </mxCell>
-    <mxCell id="e2" edge="1" source="settings_yaml" target="loader" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- INGESTION LAYER -->
-    <!-- ============================================================ -->
-
-    <mxCell id="granola_input" value="📄 Granola / Wispr&#xa;JSON Transcript&#xa;(User Upload)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#0066cc;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="380" y="120" width="150" height="70" as="geometry" />
-    </mxCell>
-
-    <mxCell id="private_flag" value="🔒 Private Meeting Flag&#xa;is_private = True&#xa;→ DISCARD immediately&#xa;(PRD Feature 12)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="480" y="210" width="160" height="80" as="geometry" />
-    </mxCell>
-
-    <mxCell id="upload_endpoint" value="POST /upload_transcript&#xa;POST /upload_file&#xa;(FastAPI Route)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff0b3;strokeColor=#c7a800;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="380" y="225" width="160" height="70" as="geometry" />
-    </mxCell>
-
-    <mxCell id="e3" edge="1" source="granola_input" target="upload_endpoint" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e4" edge="1" source="granola_input" target="private_flag" style="dashed=1;strokeColor=#cc0000;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- LANGGRAPH STATE MACHINE -->
-    <!-- ============================================================ -->
-
-    <!-- AgentState -->
-    <mxCell id="agent_state" value="AgentState (TypedDict)&#xa;─────────────────────&#xa;transcript_text: str&#xa;jira_issues: list&#xa;recent_prs: list&#xa;recent_commits: list&#xa;drafts: MeetingDrafts&#xa;project_id: int&#xa;error: str | None" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#4a9e4a;fontSize=10;align=left;fontStyle=2;" vertex="1" parent="1">
-      <mxGeometry x="720" y="115" width="200" height="130" as="geometry" />
-    </mxCell>
-
-    <!-- START -->
-    <mxCell id="lg_start" value="START" style="ellipse;whiteSpace=wrap;html=1;fillColor=#23d160;strokeColor=#1a9e49;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-      <mxGeometry x="930" y="130" width="80" height="40" as="geometry" />
-    </mxCell>
-
-    <!-- Node 1 -->
-    <mxCell id="node1" value="Node 1&#xa;fetch_context_node&#xa;─────────────&#xa;Calls jira_mcp&#xa;Calls github_mcp&#xa;Populates AgentState" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8f0c8;strokeColor=#2d9e5c;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="910" y="195" width="160" height="90" as="geometry" />
-    </mxCell>
-
-    <!-- Node 2 -->
-    <mxCell id="node2" value="Node 2&#xa;draft_and_cross_reference_node&#xa;────────────────────────&#xa;Sends prompt to Gemini Flash&#xa;Pydantic schema: MeetingDrafts&#xa;Detects Git discrepancies&#xa;Fallback: primary→backup→lite" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8f0c8;strokeColor=#2d9e5c;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="900" y="310" width="180" height="110" as="geometry" />
-    </mxCell>
-
-    <!-- Node 3 -->
-    <mxCell id="node3" value="Node 3&#xa;save_drafts_node&#xa;─────────────&#xa;Filter: source_quote required&#xa;Saves to drafts table&#xa;Status = 'waiting'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8f0c8;strokeColor=#2d9e5c;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="910" y="445" width="160" height="90" as="geometry" />
-    </mxCell>
-
-    <!-- END -->
-    <mxCell id="lg_end" value="END" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e05252;strokeColor=#9e1a1a;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-      <mxGeometry x="930" y="555" width="80" height="40" as="geometry" />
+    <mxCell id="lg_end" value="END" style="ellipse;whiteSpace=wrap;html=1;fillColor=#BF2600;fontColor=#FFFFFF;fontStyle=1;fontSize=11;strokeColor=#8C1D00;" vertex="1" parent="1">
+      <mxGeometry x="810" y="580" width="60" height="35" as="geometry" />
     </mxCell>
 
     <!-- LangGraph flow arrows -->
-    <mxCell id="e5" edge="1" source="lg_start" target="node1" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e6" edge="1" source="node1" target="node2" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e7" edge="1" source="node2" target="node3" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e8" edge="1" source="node3" target="lg_end" parent="1">
-      <mxGeometry relative="1" as="geometry" />
+    <mxCell id="a_lg1" edge="1" source="lg_start" target="lg_n1" style="rounded=1;strokeColor=#006644;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_lg2" edge="1" source="lg_n1" target="lg_n2" style="rounded=1;strokeColor=#006644;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_lg3" edge="1" source="lg_n2" target="lg_n3" style="rounded=1;strokeColor=#006644;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_lg4" edge="1" source="lg_n3" target="lg_end" style="rounded=1;strokeColor=#006644;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <!-- Private check → LangGraph (No path = proceed) -->
+    <mxCell id="a_priv_lg" edge="1" source="private_check" target="lg_start" style="rounded=1;strokeColor=#006644;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="priv_no_lbl" value="No → Run Agent" style="text;html=1;fontSize=9;fontStyle=2;fontColor=#006644;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="135" y="520" width="90" height="18" as="geometry" />
     </mxCell>
 
-    <!-- Upload endpoint → LangGraph Start -->
-    <mxCell id="e9" edge="1" source="upload_endpoint" target="lg_start" style="strokeColor=#0066cc;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
+    <!-- ======================================================================== -->
+    <!--  RIGHT COLUMN — EXTERNAL INTEGRATIONS (x=960)                            -->
+    <!-- ======================================================================== -->
+    <mxCell id="ext_swimlane" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAE6FF;strokeColor=#998DD9;strokeWidth=2;opacity=40;" vertex="1" parent="1">
+      <mxGeometry x="960" y="195" width="440" height="470" as="geometry" />
+    </mxCell>
+    <mxCell id="ext_label" value="EXTERNAL INTEGRATIONS" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontStyle=1;fontColor=#403294;" vertex="1" parent="1">
+      <mxGeometry x="970" y="197" width="200" height="20" as="geometry" />
     </mxCell>
 
-    <!-- ============================================================ -->
-    <!-- GEMINI LLM BOX -->
-    <!-- ============================================================ -->
-
-    <mxCell id="gemini_box" value="✨ Google Gemini Flash LLM&#xa;─────────────────────────&#xa;Input: numbered transcript +&#xa;  Jira context + GitHub PRs +&#xa;  agreed scope baseline&#xa;─────────────────────────&#xa;Output Schema (Pydantic):&#xa;  → Decisions[ ] (source_quote)&#xa;  → ActionItems[ ] (due_date, owner)&#xa;  → RAIDItems[ ] (type, priority)&#xa;  → ScopeChanges[ ] (impact)&#xa;  → StatusUpdates[ ] (discrepancy?)&#xa;─────────────────────────&#xa;Fallback Chain:&#xa;  gemini-3-flash-preview (primary)&#xa;  → gemini-3.5-flash-lite (backup)&#xa;  → gemini-3.5-flash-lite (hardcoded)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffeaa7;strokeColor=#f39c12;fontSize=10;align=left;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="716" y="290" width="175" height="230" as="geometry" />
+    <!-- MCP Connectors -->
+    <mxCell id="mcp_jira" value="jira_mcp&#xa;get_open_issues()&#xa;create_or_update_issue()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0B6F2;strokeColor=#6554C0;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="980" y="230" width="190" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="mcp_github" value="github_mcp&#xa;get_recent_prs()  get_commits()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0B6F2;strokeColor=#6554C0;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="980" y="300" width="190" height="45" as="geometry" />
     </mxCell>
 
-    <!-- Node2 ↔ Gemini -->
-    <mxCell id="e10" edge="1" source="node2" target="gemini_box" style="dashed=1;strokeColor=#f39c12;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
+    <!-- External APIs -->
+    <mxCell id="jira_api" value="☁️  Jira Cloud&#xa;shivaalle22.atlassian.net&#xa;REST API v3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0052CC;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#003884;" vertex="1" parent="1">
+      <mxGeometry x="1220" y="225" width="160" height="60" as="geometry" />
     </mxCell>
-    <mxCell id="e11" edge="1" source="gemini_box" target="node2" style="dashed=1;strokeColor=#f39c12;strokeWidth=2;" parent="1">
+    <mxCell id="github_api" value="🐙  GitHub&#xa;Shivaalle/pm-agent&#xa;REST API (Read-only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#24292E;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#444D56;" vertex="1" parent="1">
+      <mxGeometry x="1220" y="295" width="160" height="55" as="geometry" />
+    </mxCell>
+
+    <!-- MCP → API arrows -->
+    <mxCell id="a_jm" edge="1" source="mcp_jira" target="jira_api" style="rounded=1;strokeColor=#0052CC;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_gm" edge="1" source="mcp_github" target="github_api" style="rounded=1;strokeColor=#24292E;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="jira_rw_lbl" value="Read + Write" style="text;html=1;fontSize=9;fontStyle=2;fontColor=#0052CC;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1180" y="237" width="70" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="gh_ro_lbl" value="Read only" style="text;html=1;fontSize=9;fontStyle=2;fontColor=#24292E;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1180" y="310" width="60" height="18" as="geometry" />
+    </mxCell>
+
+    <!-- Fallback labels -->
+    <mxCell id="fallback_lbl_j" value="Live → Mock fallback" style="text;html=1;fontSize=8;fontStyle=2;fontColor=#998DD9;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="980" y="285" width="110" height="16" as="geometry" />
+    </mxCell>
+    <mxCell id="fallback_lbl_g" value="Live → Mock fallback" style="text;html=1;fontSize=8;fontStyle=2;fontColor=#998DD9;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="980" y="345" width="110" height="16" as="geometry" />
+    </mxCell>
+
+    <!-- Node 1 → MCP connectors -->
+    <mxCell id="a_n1_jira" edge="1" source="lg_n1" target="mcp_jira" style="rounded=1;strokeColor=#6554C0;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_n1_gh" edge="1" source="lg_n1" target="mcp_github" style="rounded=1;strokeColor=#6554C0;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <!-- Gemini LLM -->
+    <mxCell id="gemini_llm" value="✨ Google Gemini Flash&#xa;────────────────────────&#xa;Structured output via Pydantic schema&#xa;────────────────────────&#xa;Extracts:&#xa;  Decisions · Action Items&#xa;  RAID Items · Scope Changes&#xa;  Status Updates (discrepancy flag)&#xa;────────────────────────&#xa;Fallback: gemini-3-flash-preview&#xa;→ gemini-3.5-flash-lite" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0B3;strokeColor=#FF8B00;fontSize=10;fontStyle=1;align=left;spacingLeft=10;" vertex="1" parent="1">
+      <mxGeometry x="980" y="390" width="240" height="160" as="geometry" />
+    </mxCell>
+
+    <mxCell id="gemini_ext" value="🤖  Gemini API&#xa;generativelanguage&#xa;.googleapis.com" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4285F4;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=#1A73E8;" vertex="1" parent="1">
+      <mxGeometry x="1250" y="430" width="140" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Node 2 → Gemini -->
+    <mxCell id="a_n2_gem" edge="1" source="lg_n2" target="gemini_llm" style="rounded=1;strokeColor=#FF8B00;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_gem_ext" edge="1" source="gemini_llm" target="gemini_ext" style="rounded=1;strokeColor=#4285F4;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <!-- ======================================================================== -->
+    <!--  ROW 5 — SQLite DATABASE  (y=720)                                        -->
+    <!-- ======================================================================== -->
+    <mxCell id="db_swimlane" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F5F7;strokeColor=#C1C7D0;strokeWidth=2;opacity=50;" vertex="1" parent="1">
+      <mxGeometry x="160" y="715" width="690" height="100" as="geometry" />
+    </mxCell>
+    <mxCell id="db_label" value="SQLITE DATABASE  (data/agent.db)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontStyle=1;fontColor=#505F79;" vertex="1" parent="1">
+      <mxGeometry x="170" y="717" width="250" height="20" as="geometry" />
+    </mxCell>
+
+    <mxCell id="db_proj" value="🗂  projects" style="shape=cylinder3;whiteSpace=wrap;html=1;size=8;fillColor=#DFE1E6;strokeColor=#97A0AF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="185" y="740" width="100" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="db_draft" value="📋  drafts&#xa;status: waiting" style="shape=cylinder3;whiteSpace=wrap;html=1;size=8;fillColor=#DFE1E6;strokeColor=#97A0AF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="310" y="740" width="120" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="db_meet" value="🎙  meetings" style="shape=cylinder3;whiteSpace=wrap;html=1;size=8;fillColor=#DFE1E6;strokeColor=#97A0AF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="460" y="740" width="100" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="db_hist" value="📜  history&#xa;(audit log)" style="shape=cylinder3;whiteSpace=wrap;html=1;size=8;fillColor=#DFE1E6;strokeColor=#97A0AF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="590" y="740" width="110" height="55" as="geometry" />
+    </mxCell>
+
+    <!-- Source-quote filter -->
+    <mxCell id="sq_filter" value="⛔ Source&#xa;Quote?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFEBE6;strokeColor=#FF5630;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="745" y="730" width="80" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="sq_discard" value="Discard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF5630;fontColor=#FFFFFF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="750" y="800" width="70" height="25" as="geometry" />
+    </mxCell>
+
+    <!-- Node 3 → filter → DB -->
+    <mxCell id="a_n3_filt" edge="1" source="lg_n3" target="sq_filter" style="rounded=1;strokeColor=#006644;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_filt_db" edge="1" source="sq_filter" target="db_draft" style="rounded=1;strokeColor=#006644;strokeWidth=2;" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="sq_has_lbl" value="Has quote" style="text;html=1;fontSize=8;fontStyle=2;fontColor=#006644;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="615" y="750" width="60" height="16" as="geometry" />
+    </mxCell>
+    <mxCell id="a_filt_disc" edge="1" source="sq_filter" target="sq_discard" style="rounded=1;strokeColor=#FF5630;dashed=1;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="sq_no_lbl" value="Empty" style="text;html=1;fontSize=8;fontStyle=2;fontColor=#FF5630;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="790" y="778" width="40" height="16" as="geometry" />
+    </mxCell>
+
+    <!-- FastAPI ↔ Database -->
+    <mxCell id="a_api_dbdraft" edge="1" source="rt_drafts" target="db_draft" style="rounded=1;strokeColor=#B86200;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_api_dbhist" edge="1" source="rt_misc" target="db_hist" style="rounded=1;strokeColor=#B86200;dashed=1;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <!-- ======================================================================== -->
+    <!--  JIRA WRITEBACK FLOW (Approve → Jira)                                    -->
+    <!-- ======================================================================== -->
+    <mxCell id="a_approve_jira" edge="1" source="rt_drafts" target="mcp_jira" style="rounded=1;strokeColor=#0052CC;strokeWidth=2;dashed=1;" parent="1">
       <mxGeometry relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="720" y="430" />
-          <mxPoint x="720" y="365" />
+          <mxPoint x="900" y="412" />
+          <mxPoint x="900" y="257" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="wb_lbl" value="Jira Writeback&#xa;on Approve" style="text;html=1;fontSize=9;fontStyle=3;fontColor=#0052CC;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="890" y="317" width="85" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ======================================================================== -->
+    <!--  BOTTOM — CONFIG + LOGGING + STARTUP STRIP  (y=870)                      -->
+    <!-- ======================================================================== -->
+    <mxCell id="infra_swimlane" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F5F7;strokeColor=#DFE1E6;strokeWidth=1;opacity=50;" vertex="1" parent="1">
+      <mxGeometry x="160" y="870" width="1240" height="100" as="geometry" />
+    </mxCell>
+    <mxCell id="infra_label" value="INFRASTRUCTURE" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontStyle=1;fontColor=#97A0AF;" vertex="1" parent="1">
+      <mxGeometry x="170" y="872" width="120" height="20" as="geometry" />
+    </mxCell>
+
+    <mxCell id="env_box" value=".env&#xa;Secrets&#xa;API keys + tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F5F7;strokeColor=#97A0AF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="175" y="895" width="120" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="yaml_box" value="settings.yaml&#xa;App Params&#xa;models · scope · team" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F5F7;strokeColor=#97A0AF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="310" y="895" width="140" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="loader_box" value="loader.py&#xa;Singleton · @lru_cache&#xa;.env wins on conflict" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DEEBFF;strokeColor=#4C9AFF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="465" y="895" width="145" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="logger_box" value="logger.py&#xa;Rotating 5MB × 5&#xa;→ logs/app.log" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DEEBFF;strokeColor=#4C9AFF;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="625" y="895" width="130" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="runsh_box" value="scripts/run.sh&#xa;Checks deps · creates .venv&#xa;Starts FastAPI + Streamlit&#xa;Health check · SIGINT trap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1B1F3B;fontColor=#FFFFFF;strokeColor=#0E1225;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="775" y="890" width="185" height="65" as="geometry" />
+    </mxCell>
+
+    <!-- data flow in config strip -->
+    <mxCell id="a_env_loader" edge="1" source="env_box" target="loader_box" style="rounded=1;strokeColor=#97A0AF;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_yaml_loader" edge="1" source="yaml_box" target="loader_box" style="rounded=1;strokeColor=#97A0AF;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <!-- loader feeds into the backend (upward dotted) -->
+    <mxCell id="a_loader_up" edge="1" source="loader_box" target="rt_upload" style="rounded=1;strokeColor=#4C9AFF;dashed=1;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+    <!-- run.sh starts FastAPI + Streamlit -->
+    <mxCell id="a_run_api" edge="1" source="runsh_box" target="api_swimlane" style="rounded=1;strokeColor=#1B1F3B;dashed=1;strokeWidth=2;" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+    <mxCell id="a_run_ui" edge="1" source="runsh_box" target="ui_swimlane" style="rounded=1;strokeColor=#1B1F3B;dashed=1;strokeWidth=2;" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1420" y="922" />
+          <mxPoint x="1420" y="245" />
+          <mxPoint x="850" y="245" />
         </Array>
       </mxGeometry>
     </mxCell>
 
-    <!-- ============================================================ -->
-    <!-- MCP CONNECTORS -->
-    <!-- ============================================================ -->
-
-    <mxCell id="jira_mcp" value="jira_mcp&#xa;─────────────&#xa;get_open_issues()&#xa;create_or_update_issue()&#xa;─────────────&#xa;Live → Mock fallback" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#8e44ad;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="1200" y="120" width="160" height="100" as="geometry" />
+    <!-- ======================================================================== -->
+    <!--  LEGEND  (bottom-right)                                                   -->
+    <!-- ======================================================================== -->
+    <mxCell id="legend_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C1C7D0;strokeWidth=1;" vertex="1" parent="1">
+      <mxGeometry x="1000" y="870" width="390" height="100" as="geometry" />
     </mxCell>
-
-    <mxCell id="github_mcp" value="github_mcp&#xa;─────────────&#xa;get_recent_prs()&#xa;get_commits()&#xa;─────────────&#xa;Live → Mock fallback" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#8e44ad;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="1200" y="240" width="160" height="90" as="geometry" />
+    <mxCell id="leg_title" value="Legend" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#505F79;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1010" y="873" width="60" height="20" as="geometry" />
     </mxCell>
-
-    <!-- Node1 ↔ MCP -->
-    <mxCell id="e12" edge="1" source="node1" target="jira_mcp" style="strokeColor=#8e44ad;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
+    <mxCell id="leg1" value="── Solid line = primary data flow" style="text;html=1;fontSize=9;fontColor=#505F79;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1010" y="895" width="180" height="16" as="geometry" />
     </mxCell>
-    <mxCell id="e13" edge="1" source="node1" target="github_mcp" style="strokeColor=#8e44ad;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
+    <mxCell id="leg2" value="- - Dashed = async / fallback / config inject" style="text;html=1;fontSize=9;fontColor=#505F79;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1010" y="913" width="220" height="16" as="geometry" />
     </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- EXTERNAL SYSTEMS -->
-    <!-- ============================================================ -->
-
-    <mxCell id="jira_cloud" value="☁️ Atlassian Jira Cloud&#xa;shivaalle22.atlassian.net&#xa;─────────────────────&#xa;REST /rest/api/3/search/jql&#xa;REST /rest/api/3/issue&#xa;fields: key, summary,&#xa;  status, assignee, created" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0052cc;strokeColor=#0041a8;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="1540" y="110" width="200" height="130" as="geometry" />
+    <mxCell id="leg3" value="🔒 Private = discarded, never stored" style="text;html=1;fontSize=9;fontColor=#FF5630;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1010" y="931" width="200" height="16" as="geometry" />
     </mxCell>
-
-    <mxCell id="github_cloud" value="🐙 GitHub&#xa;Shivaalle/pm-agent&#xa;─────────────────&#xa;GET /repos/.../pulls&#xa;GET /repos/.../commits&#xa;(Read Only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#24292e;strokeColor=#444d56;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="1540" y="260" width="200" height="110" as="geometry" />
+    <mxCell id="leg4" value="⛔ Source Quote = discard if empty" style="text;html=1;fontSize=9;fontColor=#FF5630;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1010" y="949" width="200" height="16" as="geometry" />
     </mxCell>
-
-    <mxCell id="gemini_api" value="🤖 Google Gemini API&#xa;generativelanguage.googleapis.com&#xa;─────────────────────────────&#xa;Primary: gemini-3-flash-preview&#xa;Backup: gemini-3.5-flash-lite&#xa;response_schema: MeetingDrafts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4285f4;strokeColor=#1a5cb8;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="1540" y="390" width="200" height="110" as="geometry" />
+    <mxCell id="leg5" value="◇ Diamond = decision gate" style="text;html=1;fontSize=9;fontColor=#505F79;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1230" y="895" width="150" height="16" as="geometry" />
     </mxCell>
-
-    <!-- MCP → External -->
-    <mxCell id="e14" edge="1" source="jira_mcp" target="jira_cloud" style="strokeColor=#0052cc;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e15" edge="1" source="github_mcp" target="github_cloud" style="strokeColor=#24292e;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <!-- Gemini LLM box → Gemini API external -->
-    <mxCell id="e16" edge="1" source="gemini_box" target="gemini_api" style="strokeColor=#4285f4;strokeWidth=2;dashed=1;" parent="1">
-      <mxGeometry relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="891" y="405" />
-          <mxPoint x="1400" y="405" />
-          <mxPoint x="1400" y="445" />
-        </Array>
-      </mxGeometry>
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- FASTAPI BACKEND -->
-    <!-- ============================================================ -->
-
-    <mxCell id="fastapi_routes" value="FastAPI Routes&#xa;───────────────────────&#xa;GET  /                    (health)&#xa;GET  /project             (metadata)&#xa;POST /upload_transcript   (run agent)&#xa;POST /upload_file         (file upload)&#xa;GET  /drafts              (fetch queue)&#xa;POST /drafts/{id}/approve (approve)&#xa;POST /drafts/{id}/edit    (edit+approve)&#xa;POST /drafts/{id}/reject  (reject)&#xa;GET  /history             (audit log)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffef9f;strokeColor=#c7a800;fontSize=10;align=left;" vertex="1" parent="1">
-      <mxGeometry x="375" y="400" width="230" height="200" as="geometry" />
-    </mxCell>
-
-    <!-- FastAPI idempotency note -->
-    <mxCell id="idempotency" value="✅ Idempotency Check&#xa;on approve / edit&#xa;Prevents duplicate&#xa;Jira creates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#4a9e4a;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="375" y="620" width="150" height="70" as="geometry" />
-    </mxCell>
-
-    <!-- FastAPI → Jira writeback -->
-    <mxCell id="e17" edge="1" source="fastapi_routes" target="jira_mcp" style="strokeColor=#0052cc;strokeWidth=2;dashed=1;endArrow=block;" parent="1">
-      <mxGeometry relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="605" y="500" />
-          <mxPoint x="1200" y="175" />
-        </Array>
-      </mxGeometry>
-    </mxCell>
-
-    <!-- FastAPI ← Upload endpoint -->
-    <mxCell id="e18" edge="1" source="upload_endpoint" target="fastapi_routes" style="strokeColor=#c7a800;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- SQLITE DATABASE -->
-    <!-- ============================================================ -->
-
-    <mxCell id="db_projects" value="projects table&#xa;───────────────&#xa;id, name, jira_key&#xa;agreed_scope, team" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8d5f5;strokeColor=#7b4fa6;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="716" y="650" width="150" height="80" as="geometry" />
-    </mxCell>
-
-    <mxCell id="db_drafts" value="drafts table&#xa;───────────────&#xa;id, project_id, type&#xa;content (JSON), status&#xa;source_quote, created_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8d5f5;strokeColor=#7b4fa6;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="880" y="650" width="150" height="80" as="geometry" />
-    </mxCell>
-
-    <mxCell id="db_meetings" value="meetings table&#xa;───────────────&#xa;id, project_id&#xa;transcript, processed_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8d5f5;strokeColor=#7b4fa6;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="716" y="745" width="150" height="80" as="geometry" />
-    </mxCell>
-
-    <mxCell id="db_history" value="history table&#xa;───────────────&#xa;id, draft_id, action&#xa;actor, timestamp, notes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8d5f5;strokeColor=#7b4fa6;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="880" y="745" width="150" height="80" as="geometry" />
-    </mxCell>
-
-    <!-- Source quote filter gate -->
-    <mxCell id="source_gate" value="⛔ Source Quote Filter&#xa;Discard if&#xa;source_quote is empty" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="1050" y="635" width="140" height="80" as="geometry" />
-    </mxCell>
-
-    <!-- Node3 → Source gate → DB -->
-    <mxCell id="e19" edge="1" source="node3" target="source_gate" style="strokeColor=#7b4fa6;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e20" edge="1" source="source_gate" target="db_drafts" style="strokeColor=#7b4fa6;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- FastAPI → DB -->
-    <mxCell id="e21" edge="1" source="fastapi_routes" target="db_drafts" style="strokeColor=#c7a800;strokeWidth=2;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e22" edge="1" source="fastapi_routes" target="db_history" style="strokeColor=#c7a800;strokeWidth=2;dashed=1;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- loader → all backend (representative arrow) -->
-    <mxCell id="e_loader_api" edge="1" source="loader" target="fastapi_routes" style="strokeColor=#d79b00;dashed=1;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- STREAMLIT FRONTEND -->
-    <!-- ============================================================ -->
-
-    <mxCell id="ui_pm" value="👤 PM View&#xa;─────────────&#xa;Review queue&#xa;Deadline alerts 🔴&#xa;Batch approve&#xa;Private toggle 🔒&#xa;Upload transcript" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#0066cc;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="55" y="650" width="135" height="110" as="geometry" />
-    </mxCell>
-
-    <mxCell id="ui_team" value="👥 Team Member&#xa;─────────────&#xa;Filtered by name&#xa;Own action items&#xa;Own status updates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#0066cc;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="200" y="650" width="110" height="110" as="geometry" />
-    </mxCell>
-
-    <mxCell id="ui_sponsor" value="💼 Sponsor View&#xa;─────────────&#xa;Decisions only&#xa;RAID items&#xa;Scope changes&#xa;Read-only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#0066cc;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="55" y="775" width="135" height="100" as="geometry" />
-    </mxCell>
-
-    <mxCell id="ui_admin" value="🔧 Admin View&#xa;─────────────&#xa;Integrations status&#xa;Audit log / history&#xa;All drafts view" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#0066cc;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="200" y="775" width="110" height="100" as="geometry" />
-    </mxCell>
-
-    <!-- Approve/Edit/Reject flow -->
-    <mxCell id="approve_flow" value="Approve / Edit / Reject&#xa;↓&#xa;POST /drafts/{id}/approve&#xa;POST /drafts/{id}/edit&#xa;POST /drafts/{id}/reject" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#4a9e4a;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="55" y="890" width="180" height="80" as="geometry" />
-    </mxCell>
-
-    <!-- Frontend → FastAPI -->
-    <mxCell id="e23" edge="1" source="approve_flow" target="fastapi_routes" style="strokeColor=#0066cc;strokeWidth=2;endArrow=block;" parent="1">
-      <mxGeometry relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="145" y="1000" />
-          <mxPoint x="490" y="1000" />
-          <mxPoint x="490" y="600" />
-        </Array>
-      </mxGeometry>
-    </mxCell>
-
-    <!-- Frontend ← FastAPI (fetch drafts) -->
-    <mxCell id="e24" edge="1" source="fastapi_routes" target="ui_pm" style="strokeColor=#0066cc;dashed=1;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- LOGGING SYSTEM -->
-    <!-- ============================================================ -->
-
-    <mxCell id="log_file" value="logs/app.log&#xa;─────────────────&#xa;RotatingFileHandler&#xa;5 MB × 5 backups&#xa;─────────────────&#xa;ColoredConsoleFormatter&#xa;Console + file output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4d6;strokeColor=#d04a02;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="1200" y="650" width="160" height="120" as="geometry" />
-    </mxCell>
-
-    <mxCell id="log_modules" value="get_logger(name) used in:&#xa;• main.py&#xa;• agent.py&#xa;• mcp_servers.py&#xa;• database.py&#xa;• loader.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4d6;strokeColor=#d04a02;fontSize=10;align=left;" vertex="1" parent="1">
-      <mxGeometry x="1200" y="785" width="160" height="90" as="geometry" />
-    </mxCell>
-
-    <mxCell id="e25" edge="1" source="log_modules" target="log_file" style="strokeColor=#d04a02;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- Backend modules → logger -->
-    <mxCell id="e26" edge="1" source="fastapi_routes" target="log_modules" style="strokeColor=#d04a02;dashed=1;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-    <mxCell id="e27" edge="1" source="node2" target="log_modules" style="strokeColor=#d04a02;dashed=1;" parent="1">
-      <mxGeometry relative="1" as="geometry" />
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- scripts/run.sh startup -->
-    <!-- ============================================================ -->
-
-    <mxCell id="run_sh" value="scripts/run.sh&#xa;─────────────────&#xa;1. Check Python 3.11+&#xa;2. Create .venv if missing&#xa;3. pip install -r requirements.txt&#xa;4. Verify .env exists&#xa;5. Free ports 8000/8501&#xa;6. Start uvicorn (FastAPI)&#xa;7. Start streamlit (UI)&#xa;8. Health-poll backend&#xa;9. SIGINT trap → cleanup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2d3561;strokeColor=#1a1a4e;fontColor=#ffffff;fontSize=10;align=left;" vertex="1" parent="1">
-      <mxGeometry x="1180" y="400" width="190" height="190" as="geometry" />
-    </mxCell>
-
-    <mxCell id="e28" edge="1" source="run_sh" target="fastapi_routes" style="strokeColor=#2d3561;strokeWidth=2;dashed=1;" parent="1">
-      <mxGeometry relative="1" as="geometry">
-        <Array as="points">
-          <mxPoint x="1180" y="495" />
-          <mxPoint x="605" y="495" />
-        </Array>
-      </mxGeometry>
-    </mxCell>
-
-    <!-- Jira writeback label -->
-    <mxCell id="writeback_label" value="Jira Writeback&#xa;(on approve)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=9;fontStyle=2;fontColor=#0052cc;" vertex="1" parent="1">
-      <mxGeometry x="790" y="210" width="90" height="40" as="geometry" />
-    </mxCell>
-
-    <!-- ============================================================ -->
-    <!-- LEGEND -->
-    <!-- ============================================================ -->
-    <mxCell id="legend_bg" value="Legend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
-      <mxGeometry x="40" y="1120" width="600" height="80" as="geometry" />
-    </mxCell>
-    <mxCell id="leg1" value="── Solid: Primary data/control flow" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="55" y="1150" width="220" height="30" as="geometry" />
-    </mxCell>
-    <mxCell id="leg2" value="- - Dashed: Optional / fallback / async flow" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="285" y="1150" width="250" height="30" as="geometry" />
-    </mxCell>
-    <mxCell id="leg3" value="🔴 Private flag = immediate discard (no DB write)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="55" y="1175" width="300" height="20" as="geometry" />
-    </mxCell>
-    <mxCell id="leg4" value="⛔ Source quote gate = discard if empty" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
-      <mxGeometry x="360" y="1175" width="250" height="20" as="geometry" />
+    <mxCell id="leg6" value="⬭ Cylinder = database table" style="text;html=1;fontSize=9;fontColor=#505F79;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1230" y="913" width="150" height="16" as="geometry" />
     </mxCell>
 
   </root>

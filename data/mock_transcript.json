@@ -1,0 +1,28 @@
+{
+  "meeting_id": "MEET-20261119-01",
+  "title": "Sprint 14 Sync & Architecture Review",
+  "meeting_date": "2026-11-19",
+  "attendees": ["Sarah (PM)", "Alex (Backend)", "David (Frontend)", "Elena (DevOps)", "Mark (Sponsor)"],
+  "transcript": [
+    {"line": 1, "speaker": "Sarah", "text": "Good morning team, let's start our Sprint 14 sync. First up, Alex, what is the status of Task 2?"},
+    {"line": 2, "speaker": "Alex", "text": "Task 2 is progressing well. I finished the OAuth token generation and the PR was merged yesterday."},
+    {"line": 3, "speaker": "Sarah", "text": "Great, let's make sure we update Jira KAN-2 to In Review or Done."},
+    {"line": 4, "speaker": "Sarah", "text": "What about Task 1, the core user authentication workflow?"},
+    {"line": 5, "speaker": "Alex", "text": "Task 1 is completely done on my end! The login API is fully finished and ready for production."},
+    {"line": 6, "speaker": "Elena", "text": "Wait Alex, I looked at GitHub this morning. PR #45 for the login API is still open with 3 failing unit tests."},
+    {"line": 7, "speaker": "Alex", "text": "Ah right, the PR isn't merged yet. My local tests passed, but CI failed on the token expiration checks."},
+    {"line": 8, "speaker": "Sarah", "text": "Okay, so Task 1 is NOT done yet. We keep KAN-1 in In Progress until that PR is actually merged."},
+    {"line": 9, "speaker": "Sarah", "text": "Next decision: how should we handle session token expiry?"},
+    {"line": 10, "speaker": "Alex", "text": "I propose we use 15-minute access tokens with refresh token rotation. It's the most secure standard."},
+    {"line": 11, "speaker": "Sarah", "text": "Agreed. Let's officially decide on 15-minute access tokens with refresh token rotation."},
+    {"line": 12, "speaker": "Sarah", "text": "David, what are your action items for the frontend?"},
+    {"line": 13, "speaker": "David", "text": "I will complete the responsive review dashboard components by tomorrow Friday."},
+    {"line": 14, "speaker": "Sarah", "text": "Awesome. Also, we noticed someone needs to configure the Redis staging cluster."},
+    {"line": 15, "speaker": "Elena", "text": "I can take that if needed, but someone also needs to draft the API documentation before end of week."},
+    {"line": 16, "speaker": "Sarah", "text": "Yes, we need API documentation written, but we didn't assign who owns it yet. Let's flag that."},
+    {"line": 17, "speaker": "Elena", "text": "One major risk: our cloud provider announced scheduled maintenance on the EU database cluster next Tuesday."},
+    {"line": 18, "speaker": "Sarah", "text": "That is a high severity risk. Elena, please monitor that and prepare a failover plan."},
+    {"line": 19, "speaker": "Mark", "text": "Hey everyone, quick question. Can we also integrate Apple Pay and cryptocurrency checkout into this sprint?"},
+    {"line": 20, "speaker": "Sarah", "text": "Mark, crypto and Apple Pay checkout are definitely not in our agreed project scope. We will need to log that as a formal scope change request."}
+  ]
+}

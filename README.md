@@ -49,19 +49,18 @@ pip install -r requirements.txt
 
 ### 2. Configure Environment (`.env`)
 
-Create or update `.env` in the root folder:
+Secrets and tokens stay in `.env` (git-ignored), while non-secret configurations (models, agreed scope, parameters) live cleanly in `backend/config/settings.yaml`.
+
+Copy `.env.example` to `.env` and fill in your credentials:
 
 ```bash
 # Gemini API Key (from Google AI Studio)
 GEMINI_API_KEY="your-gemini-api-key"
-GEMINI_TEXT_MODEL="gemini-3-flash-preview"
-GEMINI_TEXT_BACKUP="gemini-3.5-flash-lite"
 
 # Jira Cloud Configuration
 JIRA_BASE_URL="https://your-domain.atlassian.net"
 JIRA_EMAIL="your-email@example.com"
 JIRA_API_TOKEN="your-atlassian-api-token"
-JIRA_PROJECT_KEY="KAN"
 
 # GitHub Configuration
 GITHUB_TOKEN="your-github-personal-access-token"

@@ -70,19 +70,21 @@ GITHUB_REPO="owner/repo-name"
 
 > **Dual-Mode Execution:** If Jira or GitHub tokens are omitted, the connectors automatically operate in seamless mock fallback mode, ensuring zero crashes during local testing.
 
-### 3. Run the Backend (FastAPI)
+### 3. Run Everything with One Command
+
+You can bootstrap and run the entire application (FastAPI backend + Streamlit frontend) with:
 
 ```bash
-uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+bash scripts/run.sh
 ```
 
-Interactive OpenAPI documentation is available at: `http://127.0.0.1:8000/docs`
-
-### 4. Run the Frontend (Streamlit)
-
-In a separate terminal:
+Or run them individually in separate terminals:
 
 ```bash
+# Terminal 1 - Backend API
+uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+
+# Terminal 2 - Frontend UI
 streamlit run frontend/app.py --server.port 8501
 ```
 

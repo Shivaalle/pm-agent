@@ -145,7 +145,7 @@ Live measured run against the real LLM provider:
 
 Results are written as JSON with action-item recall/precision, owner/date accuracy, scope detection, decision/RAID/status recall, citation coverage, and per-meeting breakdowns. Latest results: `evals/results/mock.json` and `evals/results/live.json` (Gemini, 10.5 s for 4 meetings).
 
-A one-minute recording shot list is in **[docs/RECORDING.md](docs/RECORDING.md)**.
+A one-minute recording shot list is kept in `archive/RECORDING.md` (older markdown notes are archived there).
 
 ---
 
@@ -163,7 +163,7 @@ Mock is **never** used as a hidden fallback when a real provider fails — live 
 
 ## 📚 Go deeper
 
-- **[docs/WRITEUP.md](docs/WRITEUP.md)** — the official one-page submission write-up answering the core problem, approach, hardest decision, and what we left out.
+- **[docs/AI_PM_Agent_Writeup.docx](docs/AI_PM_Agent_Writeup.docx)** — the official one-page submission write-up (Word document, plain language) answering the core problem, approach, hardest decision, and what we left out.
 - **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** — system architecture diagram, complete workflow, and decision gates.
 
 ---

@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-
 # ==============================================================================
-# AI Project Manager Agent - Universal Startup & Setup Script
+# AI Project Manager Agent - one-command bootstrap
 # ==============================================================================
-# Checks prerequisites, initializes virtual environment, installs dependencies,
-# verifies configurations, and boots both FastAPI backend and Streamlit frontend.
+# Default: build the React app and serve everything from FastAPI on :8000/app/
+# Dev:     ./scripts/run.sh --dev  (FastAPI :8000 + Vite HMR on :5173)
 # ==============================================================================
 
 set -o pipefail
 
-# Text formatting
 BOLD="\033[1m"
 GREEN="\033[0;32m"
 BLUE="\033[0;34m"
@@ -17,153 +15,163 @@ YELLOW="\033[1;33m"
 RED="\033[0;31m"
 RESET="\033[0m"
 
-# Resolve absolute root directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${ROOT_DIR}"
 mkdir -p "${ROOT_DIR}/logs"
 
+DEV_MODE=0
+if [ "${1:-}" = "--dev" ]; then
+  DEV_MODE=1
+fi
+
 echo -e "${BOLD}${BLUE}=====================================================${RESET}"
-echo -e "${BOLD}${BLUE}     AI Project Manager Agent - Service Bootstrapper  ${RESET}"
+echo -e "${BOLD}${BLUE}     AI Project Manager Agent - Bootstrapper         ${RESET}"
 echo -e "${BOLD}${BLUE}=====================================================${RESET}"
 
-# 1. Check Python installation
+# 1. Python ---------------------------------------------------------------
 echo -e "\n${BOLD}[1/5] Checking Python environment...${RESET}"
-if command -v python3 &>/dev/null; then
-    PY_VER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')")
-    echo -e "  ${GREEN}✔${RESET} Python 3 detected: ${BOLD}${PY_VER}${RESET}"
-else
-    echo -e "  ${RED}✘ Error:${RESET} Python 3 is not installed or not in PATH."
-    exit 1
+if ! command -v python3 &>/dev/null; then
+  echo -e "  ${RED}✘ Python 3 is not installed or not in PATH.${RESET}"
+  exit 1
 fi
+PY_VER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')")
+echo -e "  ${GREEN}✔${RESET} Python ${BOLD}${PY_VER}${RESET}"
 
-# 2. Check Virtual Environment (.venv)
+# 2. Virtual environment --------------------------------------------------
 echo -e "\n${BOLD}[2/5] Checking virtual environment (.venv)...${RESET}"
-if [ ! -d ".venv" ] || [ ! -f ".venv/bin/python" ]; then
-    echo -e "  ${YELLOW}⚡ Virtual environment not found. Creating .venv...${RESET}"
-    python3 -m venv .venv
-    echo -e "  ${GREEN}✔${RESET} Created .venv successfully."
-else
-    echo -e "  ${GREEN}✔${RESET} Virtual environment .venv already exists."
+if [ ! -x ".venv/bin/python" ]; then
+  echo -e "  ${YELLOW}⚡ Creating .venv...${RESET}"
+  python3 -m venv .venv
 fi
-
 VENV_PY="${ROOT_DIR}/.venv/bin/python"
 VENV_PIP="${ROOT_DIR}/.venv/bin/pip"
+echo -e "  ${GREEN}✔${RESET} .venv ready"
 
-# 3. Check and install dependencies
+# 3. Dependencies ---------------------------------------------------------
 echo -e "\n${BOLD}[3/5] Verifying dependencies...${RESET}"
 MISSING_DEPS=$("${VENV_PY}" -c "
-mods = ['fastapi', 'uvicorn', 'streamlit', 'pydantic', 'google.genai', 'langgraph', 'mcp', 'aiosqlite', 'httpx', 'yaml']
-missing = []
-for m in mods:
-    try:
-        __import__(m)
-    except ImportError:
-        missing.append(m)
-print(','.join(missing))
+mods = ['fastapi', 'uvicorn', 'pydantic', 'google.genai', 'langgraph', 'mcp',
+        'aiosqlite', 'httpx', 'yaml', 'dotenv', 'multipart']
+print(','.join([m for m in mods if __import__('importlib').util.find_spec(m) is None]))
 " 2>/dev/null || echo "check_failed")
+if [ -n "${MISSING_DEPS}" ]; then
+  echo -e "  ${YELLOW}⚡ Installing Python dependencies (${MISSING_DEPS})...${RESET}"
+  "${VENV_PIP}" install --upgrade pip >/dev/null 2>&1 || true
+  "${VENV_PIP}" install -r requirements.txt
+fi
+echo -e "  ${GREEN}✔${RESET} Python dependencies ready"
 
-if [ -n "${MISSING_DEPS}" ] && [ "${MISSING_DEPS}" != "" ]; then
-    echo -e "  ${YELLOW}⚡ Installing required dependencies from requirements.txt...${RESET}"
-    "${VENV_PIP}" install --upgrade pip >/dev/null 2>&1 || true
-    "${VENV_PIP}" install -r requirements.txt
-    echo -e "  ${GREEN}✔${RESET} Dependencies successfully installed."
-else
-    echo -e "  ${GREEN}✔${RESET} All core dependencies verified."
+if ! command -v npm &>/dev/null; then
+  echo -e "  ${RED}✘ Node.js/npm is required for the React frontend.${RESET}"
+  exit 1
+fi
+if [ ! -d "frontend/node_modules" ]; then
+  echo -e "  ${YELLOW}⚡ Installing frontend dependencies...${RESET}"
+  npm --prefix frontend install
 fi
 
-# 4. Check Environment Configuration (.env)
-echo -e "\n${BOLD}[4/5] Checking environment configuration (.env)...${RESET}"
+if [ "${DEV_MODE}" -eq 0 ]; then
+  echo -e "  ${YELLOW}⚡ Building the React app...${RESET}"
+  if ! npm --prefix frontend run build; then
+    echo -e "  ${RED}✘ Frontend build failed.${RESET}"
+    exit 1
+  fi
+  echo -e "  ${GREEN}✔${RESET} React build written to frontend/dist/"
+else
+  echo -e "  ${GREEN}✔${RESET} Dev mode: Vite will compile on demand"
+fi
+
+# 4. Configuration --------------------------------------------------------
+echo -e "\n${BOLD}[4/5] Checking environment configuration...${RESET}"
 if [ ! -f ".env" ]; then
-    if [ -f ".env.example" ]; then
-        echo -e "  ${YELLOW}⚠ .env file not found. Generating from .env.example...${RESET}"
-        cp .env.example .env
-        echo -e "  ${YELLOW}⚠ Please edit .env with your GEMINI_API_KEY and Jira/GitHub tokens.${RESET}"
-    else
-        echo -e "  ${RED}✘ Warning:${RESET} .env file not found."
-    fi
+  cp .env.example .env
+  echo -e "  ${YELLOW}⚠ Created .env from .env.example. Add live credentials or run offline.${RESET}"
 else
-    echo -e "  ${GREEN}✔${RESET} .env configuration file detected."
+  echo -e "  ${GREEN}✔${RESET} .env detected"
+fi
+if [ ! -f "data/mock_transcript.json" ]; then
+  echo -e "  ${YELLOW}⚠ data/mock_transcript.json missing; sample loading will be unavailable.${RESET}"
 fi
 
-# 5. Check and release lingering ports (8000 and 8501)
-echo -e "\n${BOLD}[5/5] Checking port availability...${RESET}"
+# 5. Ports ----------------------------------------------------------------
+echo -e "\n${BOLD}[5/5] Checking ports...${RESET}"
 cleanup_port() {
-    local PORT=$1
-    local PID=$(lsof -ti :${PORT} 2>/dev/null || true)
-    if [ -n "${PID}" ]; then
-        echo -e "  ${YELLOW}⚠ Port :${PORT} is in use by PID ${PID}. Terminating old process...${RESET}"
-        kill -9 ${PID} 2>/dev/null || true
-        sleep 1
-    fi
+  local PORT=$1
+  local PID
+  PID=$(lsof -ti :"${PORT}" 2>/dev/null || true)
+  if [ -n "${PID}" ]; then
+    echo -e "  ${YELLOW}⚠ Port :${PORT} in use by PID ${PID}; stopping it.${RESET}"
+    kill -9 ${PID} 2>/dev/null || true
+    sleep 1
+  fi
 }
 cleanup_port 8000
-cleanup_port 8501
-echo -e "  ${GREEN}✔${RESET} Ports :8000 (Backend API) and :8501 (Frontend UI) are ready."
+if [ "${DEV_MODE}" -eq 1 ]; then
+  cleanup_port 5173
+  echo -e "  ${GREEN}✔${RESET} Ports :8000 (API) and :5173 (Vite) are ready"
+else
+  echo -e "  ${GREEN}✔${RESET} Port :8000 (API + React) is ready"
+fi
 
-# Process cleanup handler on exit/interrupt
 BACKEND_PID=""
 FRONTEND_PID=""
-
 shutdown_services() {
-    echo -e "\n\n${BOLD}${YELLOW}Stopping all services gracefully...${RESET}"
-    if [ -n "${BACKEND_PID}" ]; then
-        kill "${BACKEND_PID}" 2>/dev/null || true
-    fi
-    if [ -n "${FRONTEND_PID}" ]; then
-        kill "${FRONTEND_PID}" 2>/dev/null || true
-    fi
-    cleanup_port 8000
-    cleanup_port 8501
-    echo -e "${GREEN}All services stopped cleanly. Goodbye!${RESET}"
-    exit 0
+  echo -e "\n${BOLD}${YELLOW}Stopping services...${RESET}"
+  [ -n "${FRONTEND_PID}" ] && kill "${FRONTEND_PID}" 2>/dev/null || true
+  [ -n "${BACKEND_PID}" ] && kill "${BACKEND_PID}" 2>/dev/null || true
+  cleanup_port 8000
+  [ "${DEV_MODE}" -eq 1 ] && cleanup_port 5173
+  echo -e "${GREEN}All services stopped.${RESET}"
+  exit 0
 }
-
 trap shutdown_services SIGINT SIGTERM EXIT
 
-# Start Backend
-echo -e "\n${BOLD}${BLUE}Starting FastAPI Backend on :8000...${RESET}"
+export SCHEDULER_ENABLED="${SCHEDULER_ENABLED:-true}"
+
+echo -e "\n${BOLD}${BLUE}Starting FastAPI on :8000...${RESET}"
 "${VENV_PY}" -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 > logs/uvicorn.log 2>&1 &
 BACKEND_PID=$!
 
-# Wait for backend healthcheck
-echo -n "  Waiting for backend API to initialize..."
+echo -n "  Waiting for the API"
 HEALTH_OK=0
-for i in {1..20}; do
-    if curl -s http://127.0.0.1:8000/ >/dev/null 2>&1; then
-        HEALTH_OK=1
-        break
-    fi
-    sleep 0.5
-    echo -n "."
+for _ in {1..40}; do
+  if curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1; then
+    HEALTH_OK=1
+    break
+  fi
+  sleep 0.5
+  echo -n "."
 done
 echo ""
+if [ ${HEALTH_OK} -ne 1 ]; then
+  echo -e "  ${RED}✘ Backend failed to start. See logs/uvicorn.log${RESET}"
+  exit 1
+fi
+echo -e "  ${GREEN}✔${RESET} API healthy"
 
-if [ ${HEALTH_OK} -eq 1 ]; then
-    echo -e "  ${GREEN}✔${RESET} Backend is healthy and ready!"
+if [ "${DEV_MODE}" -eq 1 ]; then
+  echo -e "\n${BOLD}${BLUE}Starting Vite dev server on :5173...${RESET}"
+  VITE_API_PROXY="http://127.0.0.1:8000" npm --prefix frontend run dev > logs/vite.log 2>&1 &
+  FRONTEND_PID=$!
+  sleep 2
+  URL="http://localhost:5173/app/"
 else
-    echo -e "  ${RED}✘ Backend failed to start within timeout. Check logs/app.log and logs/uvicorn.log${RESET}"
-    exit 1
+  URL="http://localhost:8000/app/"
 fi
 
-# Start Frontend
-echo -e "\n${BOLD}${BLUE}Starting Streamlit Frontend on :8501...${RESET}"
-"${VENV_PY}" -m streamlit run frontend/app.py \
-    --server.port 8501 \
-    --server.headless true \
-    --browser.gatherUsageStats false > logs/streamlit.log 2>&1 &
-FRONTEND_PID=$!
-
-sleep 2
-
 echo -e "\n${BOLD}${GREEN}=====================================================${RESET}"
-echo -e "${BOLD}${GREEN}  🚀 AI Project Manager Agent is UP AND RUNNING!     ${RESET}"
+echo -e "${BOLD}${GREEN}  AI Project Manager Agent is running${RESET}"
 echo -e "${BOLD}${GREEN}=====================================================${RESET}"
-echo -e "  ${BOLD}• Web Application (UI):${RESET}  ${BLUE}http://localhost:8501${RESET}"
-echo -e "  ${BOLD}• API Documentation:${RESET}    ${BLUE}http://localhost:8000/docs${RESET}"
-echo -e "  ${BOLD}• Application Logs:${RESET}     ${BLUE}logs/app.log${RESET}"
+echo -e "  ${BOLD}Web app:${RESET}        ${BLUE}${URL}${RESET}"
+echo -e "  ${BOLD}API docs:${RESET}       ${BLUE}http://localhost:8000/docs${RESET}"
+if [ "${DEV_MODE}" -eq 0 ]; then
+  echo -e "  ${BOLD}React dev mode:${RESET} ${BLUE}./scripts/run.sh --dev${RESET}"
+fi
+echo -e "  ${BOLD}Backend log:${RESET}    ${BLUE}logs/uvicorn.log${RESET}"
+echo -e "  ${BOLD}Demo accounts:${RESET}  sarah / alex / david / elena / mark / admin"
+echo -e "  ${BOLD}Demo password:${RESET}  ${DEMO_PASSWORD:-demo1234}"
 echo -e "${BOLD}${GREEN}=====================================================${RESET}"
-echo -e "Press ${BOLD}[Ctrl+C]${RESET} anytime to shut down both services."
+echo -e "Press ${BOLD}[Ctrl+C]${RESET} to stop."
 
-# Keep parent script running to monitor child processes
 wait

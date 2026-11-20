@@ -128,6 +128,13 @@ Mock is **never** used as a hidden fallback when a real provider fails — live 
 
 ---
 
+## 📚 Go deeper
+
+- **[docs/DEMO.md](docs/DEMO.md)** — hands-on end-to-end test script, UI walkthrough, 5-minute demo narrative, troubleshooting, and Modern Web Guidance commands.
+- **[docs/CODEBASE.md](docs/CODEBASE.md)** — complete codebase map: every file, the five core flows, DB tables, API groups, "where to change what", and the PRD invariants.
+
+---
+
 ## 📋 Assumptions & design decisions
 
 1. **Meeting source:** Upload/import (JSON, WebVTT, Teams Graph) is the chosen ingestion path; Teams is labelled as a fallback until Graph credentials are configured.

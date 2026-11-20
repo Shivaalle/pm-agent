@@ -2590,6 +2590,48 @@ pre {
   }
 }
 
+/* Forced Colors Mode (Windows High Contrast): system keywords replace author
+   colors, shadows/gradients disappear — restore boundaries with real borders. */
+@media (forced-colors: active) {
+  .panel,
+  .stat,
+  .draft-card,
+  .action-card,
+  .meeting-card,
+  .integration-card,
+  .empty-state,
+  .error-block,
+  .confirm-panel,
+  .callout,
+  .quote-block {
+    border: 1px solid CanvasText;
+  }
+
+  .badge,
+  .mode-chip,
+  .status-dot {
+    border: 1px solid CanvasText;
+  }
+
+  .button,
+  .icon-button,
+  .field input,
+  .field select,
+  .field textarea,
+  .inline-field select,
+  .project-picker select {
+    border: 1px solid ButtonText;
+  }
+
+  .tab-active {
+    border-bottom-color: Highlight;
+  }
+
+  .app-dialog::backdrop {
+    background: Canvas;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

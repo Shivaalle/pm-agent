@@ -28,6 +28,7 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const timers = useRef<number[]>([]);
+  const focusedToast = useRef<number | null>(null);
 
   const dismiss = useCallback((id: number) => {
     setToasts((current) => current.filter((toast) => toast.id !== id));
@@ -37,7 +38,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (kind: ToastKind, message: string) => {
       const id = Date.now() + Math.floor(Math.random() * 1000);
       setToasts((current) => [...current.slice(-3), { id, kind, message }]);
-      const timer = window.setTimeout(() => dismiss(id), kind === "error" ? 9000 : 5500);
+      const timer = window.setTimeout(() => {
+        // Pause dismissal while the user is focused on a control inside the toast.
+        if (focusedToast.current === id) {
+          const retry = window.setTimeout(() => dismiss(id), 1500);
+          timers.current.push(retry);
+          return;
+        }
+        dismiss(id);
+      }, kind === "error" ? 9000 : 5500);
       timers.current.push(timer);
     },
     [dismiss],
@@ -63,9 +72,27 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="toast-region" aria-live="polite" aria-atomic="false">
+      <div
+        className="toast-region"
+        role="region"
+        aria-label="Notifications"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {toasts.map((toast) => (
-          <div key={toast.id} className={`toast toast-${toast.kind}`} role="status">
+          <div
+            key={toast.id}
+            className={`toast toast-${toast.kind}`}
+            role="status"
+            onFocus={() => {
+              focusedToast.current = toast.id;
+            }}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                focusedToast.current = null;
+              }
+            }}
+          >
             <span className="toast-icon" aria-hidden="true">
               {toast.kind === "success" ? "✓" : toast.kind === "error" ? "!" : "i"}
             </span>

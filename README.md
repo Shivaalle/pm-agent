@@ -130,6 +130,7 @@ Mock is **never** used as a hidden fallback when a real provider fails — live 
 
 ## 📚 Go deeper
 
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** — system architecture diagram, complete workflow, and decision gates.
 - **[docs/DEMO.md](docs/DEMO.md)** — hands-on end-to-end test script, UI walkthrough, 5-minute demo narrative, troubleshooting, and Modern Web Guidance commands.
 - **[docs/CODEBASE.md](docs/CODEBASE.md)** — complete codebase map: every file, the five core flows, DB tables, API groups, "where to change what", and the PRD invariants.
 

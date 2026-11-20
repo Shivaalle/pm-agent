@@ -828,6 +828,43 @@ async def get_projects_for_user(user_id: int, is_admin: bool = False) -> List[Pr
     return projects
 
 
+async def create_project(
+    project_key: str,
+    name: str,
+    agreed_scope: Optional[List[str]] = None,
+    team_members: Optional[List[str]] = None,
+    jira_project_key: Optional[str] = None,
+    github_repo: Optional[str] = None,
+) -> ProjectContext:
+    """Create a new project with its own Jira/GitHub targets."""
+    async with get_db() as db:
+        async with db.execute(
+            "SELECT 1 FROM projects WHERE project_key = ?", (project_key,)
+        ) as cursor:
+            if await cursor.fetchone():
+                raise ValueError(f"Project '{project_key}' already exists")
+        await db.execute(
+            """
+            INSERT INTO projects
+            (project_key, name, agreed_scope, team_members, jira_project_key, github_repo, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                project_key,
+                name,
+                json.dumps(agreed_scope or []),
+                json.dumps(team_members or []),
+                jira_project_key or None,
+                github_repo or None,
+                _now(),
+            ),
+        )
+        await db.commit()
+    project = await get_project(project_key)
+    assert project is not None
+    return project
+
+
 async def update_project_integrations(
     project_key: str,
     jira_project_key: Optional[str],

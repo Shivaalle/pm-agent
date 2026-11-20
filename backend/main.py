@@ -21,6 +21,7 @@ from backend.agent import pm_agent_app
 from backend.auth import UserContext, get_current_user
 from backend.config import settings
 from backend.database import (
+    create_project,
     add_private_series,
     add_project_member,
     approve_draft_record,
@@ -99,6 +100,7 @@ from backend.models import (
     MeetingSummaryRecord,
     NotificationRecord,
     PrivacyMarkRequest,
+    CreateProjectRequest,
     ProjectContext,
     ProjectMember,
     QualityMetrics,
@@ -522,6 +524,27 @@ async def create_user_endpoint(
 @app.get("/projects", response_model=List[ProjectContext])
 async def list_projects(user: UserContext = Depends(get_current_user)) -> List[ProjectContext]:
     return await get_projects_for_user(user.user_id, user.is_admin)
+
+
+@app.post("/projects", response_model=ProjectContext, status_code=201)
+async def create_project_endpoint(
+    request: CreateProjectRequest,
+    user: UserContext = Depends(get_current_user),
+) -> ProjectContext:
+    user.require("admin")
+    if await get_project(request.project_key):
+        raise HTTPException(status_code=409, detail="Project already exists")
+    try:
+        return await create_project(
+            project_key=request.project_key,
+            name=request.name,
+            agreed_scope=request.agreed_scope,
+            team_members=request.team_members,
+            jira_project_key=request.jira_project_key,
+            github_repo=request.github_repo,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
 
 
 @app.get("/projects/{project_key}", response_model=ProjectContext)

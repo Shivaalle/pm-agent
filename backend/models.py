@@ -121,6 +121,15 @@ class UpdateProjectRequest(BaseModel):
     github_repo: Optional[str] = None
 
 
+class CreateProjectRequest(BaseModel):
+    project_key: str
+    name: str
+    agreed_scope: List[str] = Field(default_factory=list)
+    team_members: List[str] = Field(default_factory=list)
+    jira_project_key: Optional[str] = None
+    github_repo: Optional[str] = None
+
+
 class ProjectMember(BaseModel):
     user_id: int
     username: str

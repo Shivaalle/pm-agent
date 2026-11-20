@@ -20,6 +20,7 @@ export function AdminView({ session, project }: { session: Session; project: Pro
   const [users, setUsers] = useState<User[]>([]);
   const [members, setMembers] = useState<ProjectMember[]>([]);
   const [series, setSeries] = useState<PrivateSeries[]>([]);
+  const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -35,6 +36,13 @@ export function AdminView({ session, project }: { session: Session; project: Pro
   const [seriesForm, setSeriesForm] = useState({ series_id: "", reason: "" });
   const [memberToAdd, setMemberToAdd] = useState("");
   const [targets, setTargets] = useState({ jira_project_key: "", github_repo: "" });
+  const [showCreateProject, setShowCreateProject] = useState(false);
+  const [newProject, setNewProject] = useState({
+    project_key: "",
+    name: "",
+    jira_project_key: "",
+    github_repo: "",
+  });
 
   const projectKey = project?.project_key ?? "";
 
@@ -50,12 +58,14 @@ export function AdminView({ session, project }: { session: Session; project: Pro
     setLoading(true);
     setError("");
     try {
-      const [integrationData, userData, memberData, seriesData] = await Promise.all([
+      const [integrationData, userData, memberData, seriesData, projectsData] = await Promise.all([
         api.integrations(projectKey),
         api.users(projectKey),
         api.members(projectKey),
         api.privateSeries(projectKey),
+        api.projects(),
       ]);
+      setAllProjects(projectsData);
       setIntegrations(integrationData);
       setUsers(userData);
       setMembers(memberData);
@@ -179,6 +189,27 @@ export function AdminView({ session, project }: { session: Session; project: Pro
     }
   }
 
+  async function createNewProject(event: FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    try {
+      const created = await api.createProject({
+        project_key: newProject.project_key.trim().toUpperCase(),
+        name: newProject.name.trim(),
+        jira_project_key: newProject.jira_project_key.trim(),
+        github_repo: newProject.github_repo.trim(),
+      });
+      toast.success(`Project ${created.project_key} created. Add members to give them access.`);
+      setShowCreateProject(false);
+      setNewProject({ project_key: "", name: "", jira_project_key: "", github_repo: "" });
+      await load();
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : "Could not create the project.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (loading && !integrations) return <LoadingBlock label="Loading admin controls…" />;
   if (error) return <ErrorBlock message={error} onRetry={() => void load()} />;
 
@@ -218,6 +249,44 @@ export function AdminView({ session, project }: { session: Session; project: Pro
             ))}
           </div>
         ) : null}
+      </section>
+
+      <section className="panel" aria-labelledby="projects-title">
+        <div className="panel-heading">
+          <div>
+            <h2 id="projects-title">Projects</h2>
+            <p>
+              Each project has its own Jira key and GitHub repo. A user only sees projects they are a
+              member of.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="button button-small button-primary"
+            onClick={() => setShowCreateProject(true)}
+          >
+            New project
+          </button>
+        </div>
+        <ul className="member-list">
+          {allProjects.map((item) => (
+            <li key={item.project_key}>
+              <div>
+                <strong>
+                  {item.name} <span className="hint">({item.project_key})</span>
+                </strong>
+                <span>
+                  Jira: {item.jira_project_key ?? "global"} · GitHub: {item.github_repo ?? "global"}
+                </span>
+              </div>
+              {item.project_key === projectKey ? <Badge tone="info">Current</Badge> : null}
+            </li>
+          ))}
+        </ul>
+        <p className="hint">
+          Create a project, then add the PM under <strong>Project members</strong> and remove them
+          from any project they should not see.
+        </p>
       </section>
 
       <section className="panel" aria-labelledby="targets-title">
@@ -476,6 +545,75 @@ export function AdminView({ session, project }: { session: Session; project: Pro
             <input value={seriesForm.reason} onChange={(event) => setSeriesForm({ ...seriesForm, reason: event.target.value })} placeholder="Contains personnel matters" />
           </label>
           <p className="hint">This blocks new uploads and Teams imports for the series. Existing meetings must be marked private separately.</p>
+        </form>
+      </Dialog>
+
+      <Dialog
+        open={showCreateProject}
+        onClose={() => setShowCreateProject(false)}
+        title="Create a project"
+        footer={
+          <>
+            <button type="button" className="button button-quiet" onClick={() => setShowCreateProject(false)}>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              form="create-project-form"
+              className="button button-primary"
+              disabled={busy || !newProject.project_key.trim() || !newProject.name.trim()}
+            >
+              {busy ? "Creating…" : "Create project"}
+            </button>
+          </>
+        }
+      >
+        <form id="create-project-form" className="stack" onSubmit={(event) => void createNewProject(event)}>
+          <div className="form-grid">
+            <label className="field">
+              <span>Project key</span>
+              <input
+                value={newProject.project_key}
+                onChange={(event) => setNewProject({ ...newProject, project_key: event.target.value })}
+                placeholder="OP"
+                spellCheck={false}
+                autoCapitalize="characters"
+                required
+              />
+            </label>
+            <label className="field">
+              <span>Name</span>
+              <input
+                value={newProject.name}
+                onChange={(event) => setNewProject({ ...newProject, name: event.target.value })}
+                placeholder="Ops Portfolio"
+                required
+              />
+            </label>
+          </div>
+          <div className="form-grid">
+            <label className="field">
+              <span>Jira project key</span>
+              <input
+                value={newProject.jira_project_key}
+                onChange={(event) => setNewProject({ ...newProject, jira_project_key: event.target.value })}
+                placeholder="OP"
+                spellCheck={false}
+                autoCapitalize="characters"
+              />
+            </label>
+            <label className="field">
+              <span>GitHub repo</span>
+              <input
+                value={newProject.github_repo}
+                onChange={(event) => setNewProject({ ...newProject, github_repo: event.target.value })}
+                placeholder="owner/repo-name"
+                spellCheck={false}
+                autoCapitalize="off"
+              />
+            </label>
+          </div>
+          <p className="hint">Leave a target empty to use the global default from .env.</p>
         </form>
       </Dialog>
     </div>

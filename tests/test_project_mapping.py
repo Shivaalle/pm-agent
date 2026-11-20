@@ -75,6 +75,59 @@ def test_jira_write_uses_project_target_key():
     assert result["issue_key"].startswith(f"{JIRA_TARGET}-")
 
 
+def test_project_creation_and_membership_isolation(client: TestClient, admin_token: str):
+    created = client.post(
+        "/projects",
+        headers=auth(admin_token),
+        json={
+            "project_key": "OP",
+            "name": "Ops Portfolio",
+            "jira_project_key": "OP",
+            "github_repo": "acme/ops-repo",
+        },
+    )
+    assert created.status_code == 201
+    assert created.json()["jira_project_key"] == "OP"
+    assert created.json()["github_repo"] == "acme/ops-repo"
+
+    response = client.post(
+        "/users",
+        headers=auth(admin_token),
+        json={
+            "username": "second_pm_test",
+            "display_name": "Second PM",
+            "role": "Project Manager",
+            "project_key": "KAN",
+            "password": "demo1234",
+        },
+    )
+    assert response.status_code == 201
+    user_id = response.json()["id"]
+
+    login = client.post(
+        "/auth/login", json={"username": "second_pm_test", "password": "demo1234"}
+    )
+    token = login.json()["token"]
+    me = client.get("/auth/me", headers=auth(token))
+    assert [p["project_key"] for p in me.json()["projects"]] == ["KAN"]
+
+    assert client.post(
+        "/projects/OP/members", headers=auth(admin_token), json={"user_id": user_id}
+    ).status_code == 201
+    assert (
+        client.delete(
+            f"/projects/KAN/members/{user_id}", headers=auth(admin_token)
+        ).status_code
+        == 200
+    )
+
+    login = client.post(
+        "/auth/login", json={"username": "second_pm_test", "password": "demo1234"}
+    )
+    me = client.get("/auth/me", headers=auth(login.json()["token"]))
+    assert [p["project_key"] for p in me.json()["projects"]] == ["OP"]
+
+
 def test_agent_reads_context_from_project_targets(monkeypatch, targets_set):
     from backend import agent
 

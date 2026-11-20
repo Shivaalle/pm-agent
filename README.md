@@ -115,6 +115,12 @@ curl -X PATCH -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/js
 Leave a field empty to fall back to `JIRA_PROJECT_KEY` / `GITHUB_REPO` from `.env`. Existing approved
 drafts keep their original Jira issue; only new drafts and code sync use the updated targets.
 
+**Projects and access:** a user only sees projects they are a member of. Admins can create a project
+(**Admin → Projects → New project**, or `POST /projects`), set its targets, then add/remove members
+under **Project members**. Example: `OP` → Jira `OP`, GitHub `Shivaalle/opsbuddy-agentic-flow`,
+with `shiva_alle` as its PM and no membership in `KAN`; `sarah` remains PM of `KAN`. The dropdown
+then shows only the projects each user belongs to, and deadline alerts go to that project's PM.
+
 ---
 
 ## 🧪 Eval harness & tests

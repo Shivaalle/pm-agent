@@ -102,6 +102,14 @@ export const api = {
   capabilities: () => request<Capabilities>("/capabilities"),
 
   projects: () => request<Project[]>("/projects"),
+  createProject: (body: {
+    project_key: string;
+    name: string;
+    agreed_scope?: string[];
+    team_members?: string[];
+    jira_project_key?: string | null;
+    github_repo?: string | null;
+  }) => request<Project>("/projects", { method: "POST", body: JSON.stringify(body) }),
   project: (key: string) => request<Project>(`/projects/${encodeURIComponent(key)}`),
   updateProject: (
     key: string,

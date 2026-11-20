@@ -1,111 +1,139 @@
 # AI Project Manager Agent
 
-> **Production-grade AI Project Manager Agent MVP**  
-> Ingests project meeting transcripts, audits spoken status against live GitHub code activity, drafts grounded project updates with verbatim citations, and synchronizes approved changes back to Jira with human-in-the-loop approval.
+> **Production-grade AI Project Manager Agent**  
+> Ingests project meeting transcripts, audits spoken status against live GitHub code activity, drafts grounded project updates with verbatim citations, and synchronizes approved changes back to Jira with human-in-the-loop approval. The UI is a React/Vite SPA served by FastAPI at `/app/`.
 
 ---
 
 ## 🏗️ Architecture & Tech Stack
 
+- **Frontend:** React 19 + Vite 8 + TypeScript SPA, served by FastAPI at `/app/` (built with `npm --prefix frontend run build`). Dev mode: `./scripts/run.sh --dev` runs FastAPI on :8000 and Vite HMR on :5173.
 - **Backend:** FastAPI (asynchronous REST API).
-- **Orchestration:** LangGraph state machine (`AgentState` transitions).
-- **Model Context Protocol (MCP):** Native MCP 2.x connectors wrapping Jira Cloud REST API and GitHub REST API.
-- **LLM Engine:** Gemini Flash (`gemini-3.5-flash-lite` / `gemini-3-flash-preview`) via the official `google-genai` SDK using strict Pydantic `response_schema` (zero formatting hallucinations).
-- **Database:** SQLite (`aiosqlite`) zero-config local database with relational schema and full audit history.
-- **Frontend:** Streamlit interactive single-page app with multi-persona role toggle (Project Manager, Team Member, Sponsor, Admin).
+- **Orchestration:** LangGraph state machine (`AgentState`: fetch context → extract grounded drafts → persist → link code).
+- **LLM:** Pluggable provider — Gemini (`gemini`), OpenAI-compatible/self-hosted (`openai_compatible`), or explicit mock (`mock`). Configured via `AI_PROVIDER` in `.env` / `backend/config/settings.yaml`. No silent mock fallback; mock output only when explicitly selected or `AI_ALLOW_MOCK_FALLBACK=true`.
+- **Model Context Protocol (MCP):** Jira Cloud, GitHub and Microsoft Teams connectors. Live when credentials are configured; failures are surfaced, never silently faked.
+- **Database:** SQLite (`aiosqlite`) with migrations, full audit history, and transcript-line traceability.
+- **Auth:** Bearer session tokens via `/auth/login`; seeded demo accounts use password `demo1234`; project membership enforces access on every route.
+
+---
+
+## 📥 Meeting ingestion (documented path)
+
+The agreed, production meeting-ingestion path is **upload/import of a transcript** (documented in the README), with Microsoft Teams as a secondary option when Graph credentials are configured:
+
+| Path | Endpoint | Notes |
+|------|----------|-------|
+| Paste Granola/Wispr JSON | `POST /meetings/upload` | Body is `TranscriptUploadPayload` with numbered `transcript` lines. |
+| Upload JSON transcript file | `POST /meetings/upload-file` | Multipart file upload; accepts Granola/Wispr-style JSON. |
+| Upload Teams WebVTT | `POST /meetings/upload-vtt` | Teams WebVTT keeps speaker names and timestamps; `parse_vtt` splits into numbered lines. |
+| Import from Microsoft Graph | `GET /teams/meetings` + `POST /teams/import` | Real Microsoft Graph connector + VTT parsing. Falls back to documented demo fixtures (clearly labelled `mode: mock`) when Teams is not configured. |
+| Sample demo transcript | `GET /sample-transcript` | Loads `data/mock_transcript.json` for offline demos. |
+
+Private meetings are rejected before storage: `is_private=true` is skipped in `_ingest`, and marking an existing meeting private purges its transcript, drafts, action items and notifications, and blocks its recurring series from future ingestion.
+
+> **README assumption:** Teams transcription is not configured in this environment, so the UI labels the Teams path clearly and uses upload/import (JSON/WebVTT/sample) as the chosen meeting-source path. If you configure `TEAMS_ACCESS_TOKEN` (or client-credentials app registration), the Teams path becomes `live`.
 
 ---
 
 ## ⚡ Core Features & PRD Compliance
 
-| Feature | Description | Implementation |
-| :--- | :--- | :--- |
-| **1. Meeting Ingestion** | Ingests Granola/Wispr JSON transcripts with speakers and line numbers. | `POST /upload_transcript` & `POST /upload_file` |
-| **2. Minutes & Decisions** | Captures summary, architectural decisions, and verbatim rationale. | `decisions` schema with mandatory quote grounding |
-| **3. Action Items** | Resolves relative dates ("by Friday" -> `YYYY-MM-DD`). Marks unstated owners as `"MISSING"`. | `action_items` schema with strict no-guessing rules |
-| **4. RAID Log** | Classifies Risks, Assumptions, Issues, and Dependencies with severity and updates. | `raid_items` schema with update detection |
-| **5. Scope Creep Detection** | Compares spoken discussions against agreed project baseline scope. | `scope_changes` schema with impact assessment |
-| **6 & 13. GitHub Reality Check** | Detects discrepancies between spoken claims and Git status (e.g. claim "Done" while PR is still open). | `discrepancy_detected` flag & evidence linking |
-| **7. PM Review Queue** | Human-in-the-loop approval gate. Nothing goes to Jira without PM consent. | Streamlit cards with Approve, Edit, Reject, and Batch Approve |
-| **8. Jira Writeback** | Idempotent ticket creation, status transitions, and audit comments. | FastMCP Jira tool `create_or_update_issue` |
-| **9. Multi-Role Views** | Dedicated views for PM, Team Member (My Tasks), Sponsor (Progress), Admin (Integrations). | Streamlit sidebar persona switch |
-| **11. Change History** | Comprehensive audit trail of who approved/edited what and when. | SQLite `history` table & `GET /history` |
-| **12. Privacy by Default** | Private meetings are discarded and never processed or stored. | `is_private` check in pipeline |
+| # | Feature | Implementation |
+|---:|---------|----------------|
+| 1 | Meeting ingestion | Granola/Wispr JSON, JSON file upload, WebVTT upload, Teams Graph import, sample transcript. |
+| 2 | Minutes & decisions | Grounded drafts with mandatory verbatim source quotes; every draft cites exact transcript lines. |
+| 3 | Action items | Resolves relative dates ("by Friday" → `YYYY-MM-DD`); unstated owners marked `"MISSING"` (never guessed). |
+| 4 | RAID log | Risks, Assumptions, Issues, Dependencies with severity and update detection. |
+| 5 | Scope creep detection | Compares spoken requests against `agreed_scope` baseline; flags genuine scope changes. |
+| 6 & 13 | GitHub reality check | `discrepancy_detected` flag + `github_evidence` linking when spoken status conflicts with open PRs/commits. |
+| 7 | PM review queue | Human approval gate: nothing writes to Jira without a recorded approval. Approve / Edit / Reject / Batch Approve / Retry. |
+| 8 | Jira writeback | Status transitions, idempotency labels/keys, `sync_status`/`sync_error`, retry endpoint. Approval persisted before any Jira call. |
+| 9 | Multi-role views | PM, Team Member (own actions only), Sponsor (read-only), Admin (connectors/users/privacy). |
+| 10 | Deadline alerts + forecast | Startup scheduler + `/alerts/check`; notifications deduplicated to owner + project PM per item/day; forecast recomputed from action-item state. |
+| 11 | Change history | SQLite `history` table + `GET /history` audit trail (who approved/edited, when, Jira ticket). |
+| 12 | Privacy | Private meetings/series rejected before storage; marking private purges all derived data. |
+| 14 | Visible AI cost | Provider-reported tokens × price table (`backend/config/settings.yaml`); cost per model/meeting on Metrics page. |
+| 15 | 5-minute SLA | SLA measured ingestion→drafts; p95/avg/last latency + compliance % on Metrics page. |
 
 ---
 
-## 🚀 Quick Start Guide
-
-### 1. Environment Setup
-
-Ensure Python 3.11+ is installed. Clone the repository and install dependencies:
+## 🚀 Quick Start
 
 ```bash
-cd pm-agent
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+# 1. Copy environment template
+cp .env.example .env
+# 2. Add live credentials to .env (GEMINI_API_KEY, Jira, GitHub) — or leave for offline mock mode
+# 3. Run everything
+./scripts/run.sh
 ```
 
-### 2. Configure Environment (`.env`)
+- Web app: `http://localhost:8000/app/` (React SPA served by FastAPI)
+- API docs: `http://localhost:8000/docs`
+- Dev mode (Vite HMR): `./scripts/run.sh --dev` (FastAPI :8000 + Vite :5173)
 
-Secrets and tokens stay in `.env` (git-ignored), while non-secret configurations (models, agreed scope, parameters) live cleanly in `backend/config/settings.yaml`.
-
-Copy `.env.example` to `.env` and fill in your credentials:
+Demo accounts (password `demo1234`): `sarah` (PM), `alex`/`david`/`elena` (Team Member), `mark` (Sponsor), `admin` (Admin). All seeded into project `KAN`.
 
 ```bash
-# Gemini API Key (from Google AI Studio)
-GEMINI_API_KEY="your-gemini-api-key"
+# Backend only
+.venv/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
 
-# Jira Cloud Configuration
-JIRA_BASE_URL="https://your-domain.atlassian.net"
-JIRA_EMAIL="your-email@example.com"
-JIRA_API_TOKEN="your-atlassian-api-token"
-
-# GitHub Configuration
-GITHUB_TOKEN="your-github-personal-access-token"
-GITHUB_REPO="owner/repo-name"
+# Frontend dev only
+VITE_API_PROXY=http://127.0.0.1:8000 npm --prefix frontend run dev
 ```
-
-> **Dual-Mode Execution:** If Jira or GitHub tokens are omitted, the connectors automatically operate in seamless mock fallback mode, ensuring zero crashes during local testing.
-
-### 3. Run Everything with One Command
-
-You can bootstrap and run the entire application (FastAPI backend + Streamlit frontend) with:
-
-```bash
-bash scripts/run.sh
-```
-
-Or run them individually in separate terminals:
-
-```bash
-# Terminal 1 - Backend API
-uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
-
-# Terminal 2 - Frontend UI
-streamlit run frontend/app.py --server.port 8501
-```
-
-Open `http://localhost:8501` in your browser.
 
 ---
 
-## 🧪 Testing the Workflow
+## 🔐 Authentication & access control
 
-1. Open the Streamlit app (`http://localhost:8501`).
-2. In the **Project Manager** persona view, click **"⚡ Run Agent on Sprint 14 Sample Transcript"**.
-3. Watch the LangGraph state machine:
-   - Fetches live Jira issues (`KAN-1`, `KAN-2`, `KAN-3`) and GitHub PRs.
-   - Extracts Decisions, Action Items, RAID Risks, and Scope Changes.
-   - Detects the **discrepancy** where Alex claims Task 1 is complete while PR #45 is still open.
-4. Review the generated cards, edit if needed, and click **"Approve"**.
-5. Observe the live writeback to your Jira Cloud project!
+- `POST /auth/login` returns a Bearer session token; `GET /auth/me` returns the user and their projects.
+- Every route resolves the caller from the session token and enforces **role + project membership**.
+- `Team Member` sees only their own action items and cannot approve, upload, or view metrics/drafts.
+- `Admin` is the only role allowed integrations and user/project management.
+- Jira is never written without a persisted approval record (`approve_draft_record` runs before any Jira call).
 
 ---
 
-## 📋 Assumptions & Design Decisions
+## 🧪 Eval harness & tests
 
-1. **Transcript Format:** Transcripts follow modern JSON exports (such as Granola or Wispr Flow), containing speaker tags and ordered line numbers.
-2. **Strict Traceability:** In accordance with PRD quality rules, any LLM output lacking an explicit line-number source quote is automatically rejected by the database ingestion layer.
-3. **Idempotency:** Approved drafts record the generated Jira ticket key; re-clicking "Approve" returns the existing ticket without creating duplicates.
+Run the unit/auth/privacy/accuracy suite:
+
+```bash
+.venv/bin/python -m pytest -q
+```
+
+Run the measured golden-meeting accuracy harness (default: explicit mock provider, offline connectors — never touches live Jira/GitHub):
+
+```bash
+.venv/bin/python -m evals.run --provider mock --out evals/results/mock.json
+```
+
+Live measured run against the real LLM provider:
+
+```bash
+.venv/bin/python -m evals.run --provider gemini --out evals/results/live.json
+```
+
+Results are written as JSON with action-item recall/precision, owner/date accuracy, scope detection, decision/RAID/status recall, citation coverage, and per-meeting breakdowns. Latest mock result: `evals/results/mock.json`.
+
+---
+
+## 🔄 Replaceable AI provider
+
+Configure `AI_PROVIDER` in `.env`:
+
+- `gemini` (default): `gemini-3.5-flash-lite`, cost tracked from usage.
+- `openai_compatible`: any OpenAI-compatible server (Ollama, vLLM, LM Studio) via `OPENAI_BASE_URL` / `OPENAI_MODEL`.
+- `mock`: deterministic offline provider for tests and explicit offline demos.
+
+Mock is **never** used as a hidden fallback when a real provider fails — live failures surface as errors. `AI_ALLOW_MOCK_FALLBACK=true` is required to add mock as a final candidate.
+
+---
+
+## 📋 Assumptions & design decisions
+
+1. **Meeting source:** Upload/import (JSON, WebVTT, Teams Graph) is the chosen ingestion path; Teams is labelled as a fallback until Graph credentials are configured.
+2. **Strict traceability:** Any draft without a verified transcript source quote is discarded by `validate_source_quote`; unsourced/invalid output is never saved.
+3. **Human approval is a hard gate:** approval is recorded in SQLite before any Jira call; retries are idempotent and never create duplicate issues.
+4. **No silent fake data:** live Jira/GitHub/Gemini failures are surfaced; mock data only when credentials are absent or `mock` is explicitly selected.
+5. **Cost is an estimate** from provider-reported tokens × the price table in `backend/config/settings.yaml`, not an invoice.
+6. **SLA target** is 300 seconds (5 minutes), configurable via `SLA_SECONDS`.
+7. **Private series:** future meetings in a private series are skipped before storage; existing meetings must be marked private separately to purge.

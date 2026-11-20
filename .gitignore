@@ -36,3 +36,15 @@ logs/
 *.log
 
 # Artifacts (keep docs/ tracked for architecture diagrams)
+
+# Frontend build & dev artifacts
+frontend/dist/
+frontend/node_modules/
+frontend/package-lock.json
+frontend/tsconfig.tsbuildinfo
+
+# Eval / test artifacts
+evals/results/
+tests/.test_agent.db
+tests/.test_agent.db-wal
+tests/.test_agent.db-shm

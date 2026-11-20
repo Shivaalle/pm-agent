@@ -1,10 +1,13 @@
 fastapi
 uvicorn
 pydantic
-streamlit
 google-genai
 langgraph
 mcp
 aiosqlite
 httpx
 python-dotenv
+PyYAML
+python-multipart
+pytest
+pytest-asyncio

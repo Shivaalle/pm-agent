@@ -1,0 +1,35 @@
+{
+  "id": "sprint15-planning",
+  "title": "Sprint 15 Planning",
+  "meeting_date": "2026-11-20",
+  "project_key": "KAN",
+  "attendees": ["Sarah", "Alex", "David", "Elena", "Mark"],
+  "transcript": [
+    {"line": 1, "speaker": "Sarah", "text": "Sprint 15 planning. First decision: we will ship the notification service behind a feature flag."},
+    {"line": 2, "speaker": "David", "text": "Agreed. I will implement the notification service feature flag by Wednesday."},
+    {"line": 3, "speaker": "Elena", "text": "The Redis cluster is a dependency on the platform team."},
+    {"line": 4, "speaker": "Sarah", "text": "Correct, log it as a dependency and keep watching it."},
+    {"line": 5, "speaker": "Mark", "text": "Can we add Salesforce CRM integration this sprint? The sales team requested it."},
+    {"line": 6, "speaker": "Sarah", "text": "Salesforce CRM is not in our agreed scope. We will log a scope change and assess the impact."},
+    {"line": 7, "speaker": "Alex", "text": "KAN-12 is still in progress; I will finish the API pagination by Friday."},
+    {"line": 8, "speaker": "Sarah", "text": "Good. Everything else stays inside the agreed plan today."}
+  ],
+  "expected": {
+    "action_items": [
+      {"label": "notification feature flag", "match_all": ["notification", "feature", "flag"], "match_any": ["implement", "ship"], "owner": "David", "due_date": "2026-11-25"},
+      {"label": "API pagination", "match_all": ["api", "pagination"], "match_any": ["finish", "complete"], "owner": "Alex", "due_date": "2026-11-27"}
+    ],
+    "decisions": [
+      {"match_all": ["notification", "feature flag"]}
+    ],
+    "raid_items": [
+      {"match_all": ["redis", "dependency"], "match_any": ["platform", "cluster"]}
+    ],
+    "scope_changes": [
+      {"match_all": ["salesforce", "crm"], "match_any": ["integration", "scope"]}
+    ],
+    "status_updates": [
+      {"match_all": ["kan-12"], "match_any": ["progress", "in progress"]}
+    ]
+  }
+}

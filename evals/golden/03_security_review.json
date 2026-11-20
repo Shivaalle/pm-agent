@@ -1,0 +1,29 @@
+{
+  "id": "security-review",
+  "title": "Security Review",
+  "meeting_date": "2026-11-18",
+  "project_key": "KAN",
+  "attendees": ["Sarah", "Alex", "David", "Elena"],
+  "transcript": [
+    {"line": 1, "speaker": "Sarah", "text": "Security review. Decision: we will require MFA for all admin accounts."},
+    {"line": 2, "speaker": "Alex", "text": "Agreed. I will add MFA enforcement to the admin login by Monday."},
+    {"line": 3, "speaker": "Elena", "text": "Risk: the current session store could lose tokens during a regional failover."},
+    {"line": 4, "speaker": "Sarah", "text": "Noted as a high risk. Elena, please monitor it and prepare a failover test."},
+    {"line": 5, "speaker": "David", "text": "I will finish the dependency upgrade for the auth library by Thursday."},
+    {"line": 6, "speaker": "Sarah", "text": "Good. Everything else stays inside the agreed plan today."}
+  ],
+  "expected": {
+    "action_items": [
+      {"label": "MFA enforcement", "match_all": ["mfa", "admin"], "match_any": ["enforcement", "login", "add"], "owner": "Alex", "due_date": "2026-11-23"},
+      {"label": "auth library dependency upgrade", "match_all": ["dependency", "upgrade"], "match_any": ["auth", "library"], "owner": "David", "due_date": "2026-11-19"}
+    ],
+    "decisions": [
+      {"match_all": ["mfa", "admin", "accounts"]}
+    ],
+    "raid_items": [
+      {"match_all": ["session", "failover"], "match_any": ["token", "risk", "store"]}
+    ],
+    "scope_changes": [],
+    "status_updates": []
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "unassigned-work",
+  "title": "Quick Docs Sync",
+  "meeting_date": "2026-11-20",
+  "project_key": "KAN",
+  "attendees": ["Sarah", "Alex", "Elena"],
+  "transcript": [
+    {"line": 1, "speaker": "Sarah", "text": "Quick sync on documentation and platform stability."},
+    {"line": 2, "speaker": "Alex", "text": "Someone needs to update the runbook before the release."},
+    {"line": 3, "speaker": "Sarah", "text": "Yes, that is unassigned for now. We will not guess an owner."},
+    {"line": 4, "speaker": "Elena", "text": "We might hit rate limits on the new API gateway this week."},
+    {"line": 5, "speaker": "Sarah", "text": "Okay, let's track that risk and review it next week."}
+  ],
+  "expected": {
+    "action_items": [
+      {"label": "runbook update", "match_all": ["runbook"], "match_any": ["update", "release"], "owner": "MISSING", "due_date": "MISSING"}
+    ],
+    "decisions": [],
+    "raid_items": [
+      {"match_all": ["rate limits"], "match_any": ["api gateway", "risk"]}
+    ],
+    "scope_changes": [],
+    "status_updates": []
+  }
+}

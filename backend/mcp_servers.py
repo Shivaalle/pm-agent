@@ -319,14 +319,15 @@ async def get_jira_transitions(issue_key: str) -> List[Dict[str, Any]]:
     return [{"id": str(t["id"]), "name": t["name"]} for t in data.get("transitions", [])]
 
 
-async def find_issue_by_label(label: str) -> Optional[str]:
+async def find_issue_by_label(label: str, project_key: Optional[str] = None) -> Optional[str]:
+    target = project_key or PROJECT_KEY
     if not settings.jira_live:
         for issue in _mock_jira_issues:
-            if label in issue.get("labels", []):
+            if label in issue.get("labels", []) and issue["key"].startswith(f"{target}-"):
                 return issue["key"]
         return None
     data = await _jira_search(
-        f'project = {PROJECT_KEY} AND labels = "{label}"',
+        f'project = {target} AND labels = "{label}"',
         "key",
         1,
     )
@@ -334,13 +335,13 @@ async def find_issue_by_label(label: str) -> Optional[str]:
     return issues[0]["key"] if issues else None
 
 
-async def _resolve_assignee(display_name: Optional[str]) -> Optional[str]:
+async def _resolve_assignee(display_name: Optional[str], project_key: Optional[str] = None) -> Optional[str]:
     if not display_name or display_name.upper() == "MISSING" or not settings.jira_live:
         return None
     try:
         users = await _jira_get(
             "/rest/api/3/user/assignable/search",
-            {"query": display_name, "project": PROJECT_KEY, "maxResults": 5},
+            {"query": display_name, "project": project_key or PROJECT_KEY, "maxResults": 5},
         )
         if isinstance(users, list) and users:
             return users[0].get("accountId")
@@ -391,12 +392,15 @@ async def _transition_issue(issue_key: str, target_status: str) -> Dict[str, Any
 
 
 @jira_mcp.tool()
-async def create_or_update_issue(payload: Dict[str, Any]) -> Dict[str, Any]:
+async def create_or_update_issue(
+    payload: Dict[str, Any], project_key: Optional[str] = None
+) -> Dict[str, Any]:
     """Idempotently create a Jira issue, or comment/transition an existing one.
 
     ``idempotency_label`` is stored on newly created issues. Retrying after an
     ambiguous network failure searches for that label first, preventing a
-    duplicate ticket (PRD Feature 8).
+    duplicate ticket (PRD Feature 8). ``project_key`` selects the per-project
+    Jira target; it falls back to the global key when omitted.
     """
     issue_key = payload.get("issue_key")
     summary = payload.get("summary", "Update from AI PM Agent")
@@ -404,6 +408,7 @@ async def create_or_update_issue(payload: Dict[str, Any]) -> Dict[str, Any]:
     target_status = payload.get("status")
     assignee = payload.get("assignee")
     label = payload.get("idempotency_label")
+    jira_target = project_key or PROJECT_KEY
     _require_jira_live()
 
     try:
@@ -423,7 +428,7 @@ async def create_or_update_issue(payload: Dict[str, Any]) -> Dict[str, Any]:
             }
 
         if label and settings.jira_live:
-            existing = await find_issue_by_label(label)
+            existing = await find_issue_by_label(label, jira_target)
             if existing:
                 return {
                     "ok": True,
@@ -443,7 +448,7 @@ async def create_or_update_issue(payload: Dict[str, Any]) -> Dict[str, Any]:
                             "mode": "mock",
                         }
             number = len(_mock_jira_issues) + 1
-            new_key = f"{PROJECT_KEY}-{number}"
+            new_key = f"{jira_target}-{number}"
             _mock_jira_issues.append(
                 {
                     "key": new_key,
@@ -457,14 +462,14 @@ async def create_or_update_issue(payload: Dict[str, Any]) -> Dict[str, Any]:
             return {"ok": True, "status": "created", "issue_key": new_key, "mode": "mock"}
 
         fields: Dict[str, Any] = {
-            "project": {"key": PROJECT_KEY},
+            "project": {"key": jira_target},
             "summary": summary[:255],
             "description": _adf(description),
             "issuetype": {"name": settings.JIRA_ISSUE_TYPE},
         }
         if label:
             fields["labels"] = [label]
-        account_id = await _resolve_assignee(assignee)
+        account_id = await _resolve_assignee(assignee, jira_target)
         if account_id:
             fields["assignee"] = {"id": account_id}
         response = await _jira_post("/rest/api/3/issue", {"fields": fields})

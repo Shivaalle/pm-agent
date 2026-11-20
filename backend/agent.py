@@ -91,6 +91,8 @@ async def fetch_context_node(state: AgentState) -> Dict[str, Any]:
     project_key = state["project_key"]
     project = await get_project(project_key)
     agreed_scope = project.agreed_scope if project else settings.AGREED_SCOPE
+    jira_target = (project.jira_project_key if project else None) or project_key
+    github_repo = (project.github_repo if project else None) or None
     warnings: List[str] = []
 
     async def safe(label: str, coro):
@@ -101,10 +103,10 @@ async def fetch_context_node(state: AgentState) -> Dict[str, Any]:
             warnings.append(f"{label}: {exc}")
             return []
 
-    jira_issues = await safe("Jira issues", get_open_issues(project_key))
-    github_prs = await safe("GitHub pull requests", get_recent_prs())
-    github_commits = await safe("GitHub commits", get_commits())
-    github_issues = await safe("GitHub issues", get_github_issues())
+    jira_issues = await safe("Jira issues", get_open_issues(jira_target))
+    github_prs = await safe("GitHub pull requests", get_recent_prs(github_repo))
+    github_commits = await safe("GitHub commits", get_commits(github_repo))
+    github_issues = await safe("GitHub issues", get_github_issues(github_repo))
 
     raid_drafts = await get_drafts(project_keys=[project_key], draft_type="raid_item", limit=100)
     existing_raid = [

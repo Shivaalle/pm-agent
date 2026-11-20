@@ -116,6 +116,11 @@ class ProjectContext(BaseModel):
     member_count: int = 0
 
 
+class UpdateProjectRequest(BaseModel):
+    jira_project_key: Optional[str] = None
+    github_repo: Optional[str] = None
+
+
 class ProjectMember(BaseModel):
     user_id: int
     username: str

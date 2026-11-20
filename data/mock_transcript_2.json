@@ -1,0 +1,59 @@
+{
+  "meeting_id": "meet-live-github-01",
+  "title": "Sprint 14 Standup & Code Audit",
+  "meeting_date": "2026-11-20",
+  "attendees": ["Sarah", "Alex", "David", "Elena", "Mark"],
+  "transcript": [
+    {
+      "line": 1,
+      "speaker": "Sarah",
+      "text": "Good morning team. Let's do a quick status update on our open sprint tasks."
+    },
+    {
+      "line": 2,
+      "speaker": "Alex",
+      "text": "For KAN-1, I completed the JWT authentication endpoints and PR #1 is officially merged to main."
+    },
+    {
+      "line": 3,
+      "speaker": "Sarah",
+      "text": "Excellent Alex, good work on getting the auth PR merged."
+    },
+    {
+      "line": 4,
+      "speaker": "David",
+      "text": "On KAN-2, my database session migrations are completely done and finished. We can mark it complete."
+    },
+    {
+      "line": 5,
+      "speaker": "Sarah",
+      "text": "Wait David, did the PR for database session migrations actually merge?"
+    },
+    {
+      "line": 6,
+      "speaker": "David",
+      "text": "Yes, I finished writing the code yesterday and pushed it."
+    },
+    {
+      "line": 7,
+      "speaker": "Elena",
+      "text": "I will review the security audit checklist and have it completed by Friday."
+    },
+    {
+      "line": 8,
+      "speaker": "Sarah",
+      "text": "Let's officially decide to use 15-minute token expiry with refresh token rotation for security."
+    },
+    {
+      "line": 9,
+      "speaker": "Mark",
+      "text": "Can we also build a FaceID biometric login for our web dashboard this sprint?"
+    },
+    {
+      "line": 10,
+      "speaker": "Sarah",
+      "text": "FaceID is out of our agreed baseline scope, but we will log it as a Scope Change and assess the impact."
+    }
+  ],
+  "is_private": false
+}

@@ -103,6 +103,14 @@ export const api = {
 
   projects: () => request<Project[]>("/projects"),
   project: (key: string) => request<Project>(`/projects/${encodeURIComponent(key)}`),
+  updateProject: (
+    key: string,
+    body: { jira_project_key?: string | null; github_repo?: string | null },
+  ) =>
+    request<Project>(`/projects/${encodeURIComponent(key)}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
   members: (key: string) =>
     request<ProjectMember[]>(`/projects/${encodeURIComponent(key)}/members`),
   users: (projectKey?: string) => request<User[]>(`/users${query({ project_key: projectKey })}`),

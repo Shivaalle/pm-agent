@@ -66,6 +66,7 @@ from backend.database import (
     save_meeting,
     set_meeting_status,
     update_action_item_status,
+    update_project_integrations,
 )
 from backend.logger import get_logger, setup_logging
 from backend.mcp_servers import (
@@ -108,6 +109,7 @@ from backend.models import (
     TranscriptLine,
     TranscriptUploadPayload,
     UpdateActionItemRequest,
+    UpdateProjectRequest,
     UploadResult,
     UserRecord,
 )
@@ -531,6 +533,37 @@ async def project_details(
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     return project
+
+
+@app.patch("/projects/{project_key}", response_model=ProjectContext)
+async def update_project(
+    project_key: str,
+    request: UpdateProjectRequest,
+    user: UserContext = Depends(get_current_user),
+) -> ProjectContext:
+    """Set this project's Jira project key and GitHub repo (PM or Admin)."""
+    user.require("manage_project")
+    await user.require_project(project_key)
+    project = await get_project(project_key)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    jira_key = (
+        request.jira_project_key
+        if request.jira_project_key is not None
+        else project.jira_project_key
+    )
+    repo = request.github_repo if request.github_repo is not None else project.github_repo
+    await update_project_integrations(project_key, jira_key, repo)
+    updated = await get_project(project_key)
+    assert updated is not None
+    logger.info(
+        "Project %s integrations updated by %s: Jira=%s GitHub=%s",
+        project_key,
+        user.username,
+        updated.jira_project_key,
+        updated.github_repo,
+    )
+    return updated
 
 
 @app.get("/projects/{project_key}/members", response_model=List[ProjectMember])

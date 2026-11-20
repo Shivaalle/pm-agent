@@ -828,6 +828,29 @@ async def get_projects_for_user(user_id: int, is_admin: bool = False) -> List[Pr
     return projects
 
 
+async def update_project_integrations(
+    project_key: str,
+    jira_project_key: Optional[str],
+    github_repo: Optional[str],
+) -> bool:
+    """Set the per-project Jira key and GitHub repo used by all connectors.
+
+    Credentials remain global (.env); only the targets vary per project.
+    Empty values fall back to the global defaults in ``get_project``.
+    """
+    async with get_db() as db:
+        cursor = await db.execute(
+            """
+            UPDATE projects
+            SET jira_project_key = ?, github_repo = ?
+            WHERE project_key = ?
+            """,
+            (jira_project_key or None, github_repo or None, project_key),
+        )
+        await db.commit()
+        return cursor.rowcount > 0
+
+
 # ---------------------------------------------------------------------------
 # Meetings and transcripts
 # ---------------------------------------------------------------------------

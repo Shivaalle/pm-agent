@@ -34,8 +34,16 @@ export function AdminView({ session, project }: { session: Session; project: Pro
   });
   const [seriesForm, setSeriesForm] = useState({ series_id: "", reason: "" });
   const [memberToAdd, setMemberToAdd] = useState("");
+  const [targets, setTargets] = useState({ jira_project_key: "", github_repo: "" });
 
   const projectKey = project?.project_key ?? "";
+
+  useEffect(() => {
+    setTargets({
+      jira_project_key: project?.jira_project_key ?? "",
+      github_repo: project?.github_repo ?? "",
+    });
+  }, [project?.project_key, project?.jira_project_key, project?.github_repo]);
 
   async function load() {
     if (!projectKey) return;
@@ -150,6 +158,27 @@ export function AdminView({ session, project }: { session: Session; project: Pro
     }
   }
 
+  async function saveTargets(event: FormEvent) {
+    event.preventDefault();
+    if (!projectKey) return;
+    setBusy(true);
+    try {
+      const updated = await api.updateProject(projectKey, {
+        jira_project_key: targets.jira_project_key.trim(),
+        github_repo: targets.github_repo.trim(),
+      });
+      setTargets({
+        jira_project_key: updated.jira_project_key ?? "",
+        github_repo: updated.github_repo ?? "",
+      });
+      toast.success(`Targets saved for ${projectKey}. Future meetings use them.`);
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : "Could not save the targets.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (loading && !integrations) return <LoadingBlock label="Loading admin controls…" />;
   if (error) return <ErrorBlock message={error} onRetry={() => void load()} />;
 
@@ -189,6 +218,55 @@ export function AdminView({ session, project }: { session: Session; project: Pro
             ))}
           </div>
         ) : null}
+      </section>
+
+      <section className="panel" aria-labelledby="targets-title">
+        <div className="panel-heading">
+          <div>
+            <h2 id="targets-title">Project targets</h2>
+            <p>
+              Choose which Jira project and GitHub repo this project uses. Credentials stay global;
+              the selected project in the top bar drives every Jira/GitHub call. Leave a field empty
+              to use the global default.
+            </p>
+          </div>
+          <Badge tone="info">{projectKey}</Badge>
+        </div>
+        <form className="stack" onSubmit={(event) => void saveTargets(event)}>
+          <div className="form-grid">
+            <label className="field">
+              <span>Jira project key</span>
+              <input
+                value={targets.jira_project_key}
+                onChange={(event) => setTargets({ ...targets, jira_project_key: event.target.value })}
+                placeholder="KAN"
+                spellCheck={false}
+                autoCapitalize="characters"
+              />
+              <span className="field-hint">Issues are created here; defaults to the global key.</span>
+            </label>
+            <label className="field">
+              <span>GitHub repository</span>
+              <input
+                value={targets.github_repo}
+                onChange={(event) => setTargets({ ...targets, github_repo: event.target.value })}
+                placeholder="owner/repo-name"
+                spellCheck={false}
+                autoCapitalize="off"
+              />
+              <span className="field-hint">PRs, commits and issues are read from here.</span>
+            </label>
+          </div>
+          <div className="inline-actions">
+            <button type="submit" className="button button-primary" disabled={busy}>
+              {busy ? "Saving…" : "Save targets"}
+            </button>
+            <span className="hint">
+              New drafts and code sync use these targets. Previously approved drafts keep their
+              original Jira issue.
+            </span>
+          </div>
+        </form>
       </section>
 
       <div className="content-grid">

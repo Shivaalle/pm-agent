@@ -16,6 +16,7 @@ from backend.database import (
     get_forecast,
     get_notifications,
     get_overdue_action_items,
+    get_project,
     get_project_members,
     get_project_pm_usernames,
     recompute_forecast,
@@ -210,9 +211,11 @@ async def approve_draft(
         sync_error=None,
     )
 
+    project = await get_project(draft.project_key)
+    jira_target = (project.jira_project_key if project else None) or draft.project_key
     write_result: Dict[str, Any]
     try:
-        write_result = await create_or_update_issue(payload)
+        write_result = await create_or_update_issue(payload, project_key=jira_target)
     except Exception as exc:
         write_result = {"ok": False, "error": str(exc)}
 
@@ -273,8 +276,10 @@ async def retry_draft_sync(
     if draft.sync_status not in {"failed", "partial"}:
         raise ApprovalError("This draft does not need a Jira retry")
     payload = build_jira_payload(draft)
+    project = await get_project(draft.project_key)
+    jira_target = (project.jira_project_key if project else None) or draft.project_key
     try:
-        write_result = await create_or_update_issue(payload)
+        write_result = await create_or_update_issue(payload, project_key=jira_target)
     except Exception as exc:
         write_result = {"ok": False, "error": str(exc)}
     jira_key = write_result.get("issue_key") or draft.jira_issue_key
@@ -364,10 +369,11 @@ async def link_code_activity(
     """Store GitHub activity, link it to Jira keys/action items, flag mismatches."""
     from backend.mcp_servers import get_commits, get_github_issues, get_recent_prs
 
-    prs = prs if prs is not None else await get_recent_prs()
-    commits = commits if commits is not None else await get_commits()
-    issues = issues if issues is not None else await get_github_issues()
-    repo = settings.GITHUB_REPO or "mock/repo"
+    project = await get_project(project_key)
+    repo = (project.github_repo if project else None) or settings.GITHUB_REPO or "mock/repo"
+    prs = prs if prs is not None else await get_recent_prs(repo)
+    commits = commits if commits is not None else await get_commits(repo)
+    issues = issues if issues is not None else await get_github_issues(repo)
 
     status_by_key = {
         issue.get("key"): issue.get("status", "") for issue in (jira_context or [])

@@ -1,20 +1,54 @@
 app:
   name: "AI Project Manager Agent"
-  version: "1.0.0"
+  version: "2.0.0"
   env: "development"
+  cors_origins:
+    - "http://localhost:5173"
+    - "http://127.0.0.1:5173"
+    - "http://localhost:8000"
+    - "http://127.0.0.1:8000"
+
+ai:
+  provider: "gemini"          # gemini | openai_compatible | mock
+  # Never silently save fake output. Set to "mock" explicitly for offline demos.
+  allow_mock_fallback: false
+  max_retries: 1
+  track_cost: true
+  measure_sla: true
+  sla_seconds: 300
 
 models:
-  primary: "gemini-3-flash-preview"
-  backup: "gemini-3.5-flash-lite"
-  audio: "gemini-3.5-transcribe"
+  primary: "gemini-3.5-flash-lite"
+  backup: "gemini-3.7-flash"
   temperature: 0.1
+  # USD per 1M tokens. Used for the visible cost estimate.
+  pricing:
+    default: { input: 0.30, output: 2.50 }
+    "gemini-3.5-flash-lite": { input: 0.10, output: 0.40 }
+    "gemini-3.7-flash": { input: 0.30, output: 2.50 }
+    "gemini-3.1-flash-lite": { input: 0.10, output: 0.40 }
+    "mock-deterministic": { input: 0.0, output: 0.0 }
+
+openai_compatible:
+  base_url: "http://localhost:11434/v1"   # Ollama / vLLM / any OpenAI-compatible server
+  model: "qwen2.5:14b"
+  api_key_env: "OPENAI_API_KEY"
 
 jira:
   default_project_key: "KAN"
-  max_results: 25
+  max_results: 50
+  issue_type: "Task"
 
 github:
-  per_page: 15
+  per_page: 25
+
+teams:
+  enabled: true
+  default_user_id: ""       # Graph user id or UPN when using application permissions
+
+scheduler:
+  alert_scan_interval_seconds: 60
+  scheduler_enabled: true
 
 project_baseline:
   key: "KAN"
@@ -24,7 +58,7 @@ project_baseline:
     - "Role-based access control (Admin, PM, Member, Sponsor)"
     - "Core database schema and migrations for projects and tasks"
     - "REST API endpoints for Jira and GitHub synchronization"
-    - "Streamlit web dashboard for draft review and progress tracking"
+    - "Web dashboard for draft review and progress tracking"
   team_members:
     - "Sarah (Project Manager)"
     - "Alex (Backend Tech Lead)"

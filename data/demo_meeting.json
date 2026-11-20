@@ -1,0 +1,23 @@
+{
+  "meeting_id": "DEMO-MEET-20261120",
+  "title": "Sprint 15 Review & Auth Hardening",
+  "meeting_date": "2026-11-20",
+  "project_key": "KAN",
+  "attendees": ["Sarah", "Alex", "David", "Elena", "Mark"],
+  "source": "demo_upload",
+  "transcript": [
+    {"line": 1, "speaker": "Sarah", "text": "Good morning everyone. Sprint 15 review. Let's keep this short and focus on the auth work."},
+    {"line": 2, "speaker": "Alex", "text": "For KAN-7, I finished the retry backoff and the code is already merged to main."},
+    {"line": 3, "speaker": "Sarah", "text": "Hold on. Is the pull request for KAN-7 actually merged? I saw it still open this morning."},
+    {"line": 4, "speaker": "Alex", "text": "Correct, PR number 3 is still open in review. My local tests passed but CI has not run yet."},
+    {"line": 5, "speaker": "Elena", "text": "KAN-8 is different. The session store failover health check is merged to main and the PR is closed."},
+    {"line": 6, "speaker": "Sarah", "text": "Good. Let's mark KAN-8 as Done now that the code is live."},
+    {"line": 7, "speaker": "David", "text": "I will write the rollback runbook by tomorrow."},
+    {"line": 8, "speaker": "Sarah", "text": "Thanks David. Also, someone needs to update the API rate limit documentation before the release."},
+    {"line": 9, "speaker": "Elena", "text": "One risk: our auth gateway could hit 429s during peak load and lock users out."},
+    {"line": 10, "speaker": "Sarah", "text": "Agreed. Let's decide on exponential backoff with jitter for all 429 responses."},
+    {"line": 11, "speaker": "Mark", "text": "Can we also add FaceID login to the web dashboard this sprint? A customer asked for it."},
+    {"line": 12, "speaker": "Sarah", "text": "FaceID is outside our agreed scope. Let's log it as a scope change and assess the impact."},
+    {"line": 13, "speaker": "Sarah", "text": "KAN-8 is officially done. Please update Jira."}
+  ]
+}

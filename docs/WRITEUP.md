@@ -1,41 +1,24 @@
-# AI Project Manager Agent — System Write-Up
+# AI Project Manager Agent — Write-Up
 
 ### 1. The Core Problem
-On enterprise engineering teams, real project status is spoken informally in meetings, but it rarely flows accurately into the plan. Getting an LLM to generate generic meeting summaries is trivial; the hard problem is building an agent that enterprise project managers can actually trust. That requires reconciling messy human conversation ("it's basically done", "by Friday") against deterministic code truth without hallucinating unstated owners, inventing fake dates, or silently corrupting Jira with unverified updates.
-
----
+On enterprise projects, the real status is spoken in meetings and rarely reaches the plan. Producing a plausible summary is easy; building something a project manager will trust is not. The hard part is reconciling informal speech ("basically done", "by Friday") with deterministic Jira and GitHub reality, without inventing owners, guessing dates, or writing unverified changes into the system of record.
 
 ### 2. Our Approach
+The obvious alternative is one prompt that reads a transcript and calls the Jira API directly. We rejected it: a monolithic prompt cannot cross-check spoken claims against live code, and an unsupervised write destroys trust on the first mistake.
+
 ```
-[ Meeting Transcript ] ──► [ Node 1: Fetch Live Context ] ──► [ Node 2: Extract & Audit ] ──► [ Node 3: Grounded Staging ]
-(Teams / WebVTT / JSON)    (Jira issues + GitHub PRs via MCP) (Gemini + Pydantic Schema)       (Source-quote verified)
-                                                                                                        │
-                                                                                                        ▼
-[ Live Jira Writeback ] ◄── [ Human Approval Gate ] ◄── [ React Review Queue ] ◄── [ SQLite agent.db ]
-(Issue / Comment / Status)   (PM: Approve / Edit / Reject)   (Discrepancy warnings)             (Audit history & telemetry)
+[ Meeting Transcript ] ──► [ Fetch Live Context ] ──► [ Extract & Audit ] ──► [ Persist & Link ]
+(Teams / WebVTT / JSON)     (Jira + GitHub via MCP)    (Gemini + Pydantic)      (SQLite + line citations)
+                                                                                        │
+                                                                                        ▼
+[ Jira Writeback ] ◄── [ Human Approval Gate ] ◄── [ React Review Queue ] ◄── [ Code-Activity Links ]
+(Issue / Status / Comment) (PM: Approve / Edit / Reject)  (Discrepancy warnings)   (PRs / commits / issues)
 ```
 
-The obvious alternative was a single prompt that reads the transcript and writes directly to the Jira API. We rejected this because monolithic prompts cannot cross-audit verbal claims against live code activity, and unsupervised writes destroy human trust immediately. 
-
-Instead, we built a four-node **LangGraph state machine** (three functional stages, plus persistence) decoupled through **Model Context Protocol (MCP)** connectors:
-1. **Live Context Pull:** Before parsing speech, the agent queries live Jira tickets and GitHub pull requests.
-2. **Audited Extraction:** The agent processes the conversation against baseline project scope and code activity using structured Pydantic schemas. Relative dates ("by Friday") resolve to exact calendar dates, and unstated fields default strictly to `"MISSING"`.
-3. **Approval First:** Everything is staged locally in SQLite (`agent.db`) with status `waiting`. Every item requires an exact verbatim line citation. Nothing touches Jira until the PM clicks Approve.
-
----
+We built a four-node LangGraph state machine behind Model Context Protocol connectors. The first node fetches live Jira issues and GitHub pull requests and commits for the selected project. The second extracts structured objects with Gemini: relative dates become calendar dates, and unstated fields stay `"MISSING"`. The third stages every draft in SQLite with a verbatim transcript citation and links GitHub activity to Jira keys and action items. The fourth is the human gate — nothing reaches Jira until the PM approves in the review queue.
 
 ### 3. The Hardest Decision
-The most difficult architectural decision was **how to handle contradictions between spoken claims and Git reality**—for example, when an engineer claims a task is "completely done", but the linked GitHub PR is still open and unmerged.
-
-We weighed three options:
-* **Option A: Auto-block the update.** (Risk: The work might be complete on a separate fork or demoed locally; an automated block frustrates the team).
-* **Option B: Trust the spoken claim and mark Jira done.** (Risk: Status goes stale and unmerged code is marked complete, defeating the entire purpose of the agent).
-* **Option C: Draft the update, but flag the discrepancy.** 
-
-We chose **Option C**. The agent drafts the status update, marks `discrepancy_detected: true`, lowers its confidence score, and displays an unambiguous warning banner citing the open PR. The PM gets full context to make the decision in one click.
-
----
+The hardest decision was what to do when a spoken claim contradicts Git reality: an engineer says a task is "completely done" while its pull request is still open. We weighed three responses. Auto-block the update risks frustrating a team whose work may exist on another branch. Trust the claim and mark Jira done risks stale, false status — defeating the purpose of the product. Draft the change but flag it preserves both evidence and human control. We chose the third: the agent lowers confidence, sets `discrepancy_detected`, and shows a warning citing the open PR, leaving the PM to decide in one click. The agent stays assistive without hiding the contradiction.
 
 ### 4. What We Left Out & What's Next
-* **What we left out:** We deliberately skipped live in-call audio recording and calendar integrations. Teams transcription permissions vary widely in enterprises, so we prioritized reliable ingestion (Granola/Wispr JSON, Teams WebVTT, and Microsoft Graph imports) with immediate privacy discards. We also kept rejection one-way rather than auto-commenting rejections back to Jira.
-* **What we would do next:** Implement learning from PM edits (using logged history diffs to tune prompt heuristics per team) and active Slack/Teams notifications when overdue deadline alerts flip the project forecast to "At Risk".
+We deliberately did not build live in-call audio recording, calendar sync, or outbound Teams alerts — deadline alerts are in-product only. Ambiguous owner and date phrases are handled conservatively, which can miss valid work. Next we would learn from the PM's edits to improve those judgements and push deadline alerts directly into Teams.

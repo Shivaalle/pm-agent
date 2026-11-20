@@ -1,0 +1,132 @@
+{
+  "generated_at": "2026-11-20T07:08:24Z",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "live_connectors": false,
+  "meetings": 4,
+  "duration_seconds": 10.52,
+  "metrics": {
+    "action_item_recall": 0.75,
+    "action_item_precision": 0.75,
+    "owner_accuracy": 1.0,
+    "due_date_accuracy": 0.6667,
+    "decision_recall": 1.0,
+    "raid_recall": 1.0,
+    "scope_change_recall": 1.0,
+    "scope_change_precision": 1.0,
+    "status_update_recall": 1.0,
+    "citation_coverage": 1.0,
+    "totals": {
+      "expected_actions": 8,
+      "actions_matched": 6,
+      "action_drafts": 8,
+      "actions_matched_precision": 6,
+      "owners_expected": 6,
+      "owners_correct": 6,
+      "dates_expected": 6,
+      "dates_correct": 4,
+      "expected_decisions": 3,
+      "decisions_matched": 3,
+      "expected_raids": 4,
+      "raids_matched": 4,
+      "expected_scopes": 2,
+      "scopes_matched": 2,
+      "scope_drafts": 2,
+      "scope_matched_precision": 2,
+      "expected_statuses": 3,
+      "statuses_matched": 3,
+      "drafts": 20,
+      "cited_drafts": 20
+    },
+    "meetings": [
+      {
+        "id": "sprint14-sync",
+        "title": "Sprint 14 Sync & Architecture Review",
+        "latency_seconds": 3.61,
+        "drafts": 8,
+        "draft_types": {
+          "decision": 1,
+          "action_item": 3,
+          "raid_item": 1,
+          "scope_change": 1,
+          "status_update": 2
+        },
+        "action_recall": 0.6667,
+        "owner_accuracy": 1.0,
+        "due_date_accuracy": 0.5,
+        "scope_recall": 1.0,
+        "missing_actions": [
+          "API documentation"
+        ],
+        "unexpected_actions": [
+          "Action: monitor cloud provider scheduled maintenance on the EU datab (Owner: Elena Rossi)"
+        ],
+        "unexpected_scope_changes": []
+      },
+      {
+        "id": "sprint15-planning",
+        "title": "Sprint 15 Planning",
+        "latency_seconds": 2.65,
+        "drafts": 6,
+        "draft_types": {
+          "decision": 1,
+          "action_item": 2,
+          "raid_item": 1,
+          "scope_change": 1,
+          "status_update": 1
+        },
+        "action_recall": 1.0,
+        "owner_accuracy": 1.0,
+        "due_date_accuracy": 1.0,
+        "scope_recall": 1.0,
+        "missing_actions": [],
+        "unexpected_actions": [],
+        "unexpected_scope_changes": []
+      },
+      {
+        "id": "security-review",
+        "title": "Security Review",
+        "latency_seconds": 2.33,
+        "drafts": 5,
+        "draft_types": {
+          "decision": 1,
+          "action_item": 3,
+          "raid_item": 1,
+          "scope_change": 0,
+          "status_update": 0
+        },
+        "action_recall": 1.0,
+        "owner_accuracy": 1.0,
+        "due_date_accuracy": 0.5,
+        "scope_recall": null,
+        "missing_actions": [],
+        "unexpected_actions": [
+          "Action: Monitor session store risk and prepare a failover test (Owner: Elena)"
+        ],
+        "unexpected_scope_changes": []
+      },
+      {
+        "id": "unassigned-work",
+        "title": "Quick Docs Sync",
+        "latency_seconds": 1.76,
+        "drafts": 1,
+        "draft_types": {
+          "decision": 0,
+          "action_item": 0,
+          "raid_item": 1,
+          "scope_change": 0,
+          "status_update": 0
+        },
+        "action_recall": 0.0,
+        "owner_accuracy": null,
+        "due_date_accuracy": null,
+        "scope_recall": null,
+        "missing_actions": [
+          "runbook update"
+        ],
+        "unexpected_actions": [],
+        "unexpected_scope_changes": []
+      }
+    ]
+  }
+}

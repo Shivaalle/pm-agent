@@ -1,0 +1,131 @@
+{
+  "generated_at": "2026-11-20T07:08:13Z",
+  "provider": "mock",
+  "model": "mock",
+  "live_connectors": false,
+  "meetings": 4,
+  "duration_seconds": 0.25,
+  "metrics": {
+    "action_item_recall": 1.0,
+    "action_item_precision": 0.7273,
+    "owner_accuracy": 0.75,
+    "due_date_accuracy": 1.0,
+    "decision_recall": 0.6667,
+    "raid_recall": 1.0,
+    "scope_change_recall": 0.5,
+    "scope_change_precision": 0.5,
+    "status_update_recall": 0.6667,
+    "citation_coverage": 1.0,
+    "totals": {
+      "expected_actions": 8,
+      "actions_matched": 8,
+      "action_drafts": 11,
+      "actions_matched_precision": 8,
+      "owners_expected": 8,
+      "owners_correct": 6,
+      "dates_expected": 8,
+      "dates_correct": 8,
+      "expected_decisions": 3,
+      "decisions_matched": 2,
+      "expected_raids": 4,
+      "raids_matched": 4,
+      "expected_scopes": 2,
+      "scopes_matched": 1,
+      "scope_drafts": 2,
+      "scope_matched_precision": 1,
+      "expected_statuses": 3,
+      "statuses_matched": 2,
+      "drafts": 35,
+      "cited_drafts": 35
+    },
+    "meetings": [
+      {
+        "id": "sprint14-sync",
+        "title": "Sprint 14 Sync & Architecture Review",
+        "latency_seconds": 0.02,
+        "drafts": 15,
+        "draft_types": {
+          "decision": 2,
+          "action_item": 5,
+          "raid_item": 3,
+          "scope_change": 1,
+          "status_update": 4
+        },
+        "action_recall": 1.0,
+        "owner_accuracy": 0.3333,
+        "due_date_accuracy": 1.0,
+        "scope_recall": 0.0,
+        "missing_actions": [],
+        "unexpected_actions": [
+          "Action: Monitor that and prepare a failover plan (Owner: MISSING)",
+          "Action: Log that as a formal scope change request (Owner: MISSING)"
+        ],
+        "unexpected_scope_changes": [
+          "Scope change: Mark, crypto and Apple Pay checkout are definitely not "
+        ]
+      },
+      {
+        "id": "sprint15-planning",
+        "title": "Sprint 15 Planning",
+        "latency_seconds": 0.02,
+        "drafts": 9,
+        "draft_types": {
+          "decision": 3,
+          "action_item": 2,
+          "raid_item": 2,
+          "scope_change": 1,
+          "status_update": 1
+        },
+        "action_recall": 1.0,
+        "owner_accuracy": 1.0,
+        "due_date_accuracy": 1.0,
+        "scope_recall": 1.0,
+        "missing_actions": [],
+        "unexpected_actions": [],
+        "unexpected_scope_changes": []
+      },
+      {
+        "id": "security-review",
+        "title": "Security Review",
+        "latency_seconds": 0.02,
+        "drafts": 8,
+        "draft_types": {
+          "decision": 2,
+          "action_item": 3,
+          "raid_item": 3,
+          "scope_change": 0,
+          "status_update": 0
+        },
+        "action_recall": 1.0,
+        "owner_accuracy": 1.0,
+        "due_date_accuracy": 1.0,
+        "scope_recall": null,
+        "missing_actions": [],
+        "unexpected_actions": [
+          "Action: Monitor it and prepare a failover test (Owner: MISSING)"
+        ],
+        "unexpected_scope_changes": []
+      },
+      {
+        "id": "unassigned-work",
+        "title": "Quick Docs Sync",
+        "latency_seconds": 0.02,
+        "drafts": 3,
+        "draft_types": {
+          "decision": 0,
+          "action_item": 1,
+          "raid_item": 2,
+          "scope_change": 0,
+          "status_update": 0
+        },
+        "action_recall": 1.0,
+        "owner_accuracy": 1.0,
+        "due_date_accuracy": 1.0,
+        "scope_recall": null,
+        "missing_actions": [],
+        "unexpected_actions": [],
+        "unexpected_scope_changes": []
+      }
+    ]
+  }
+}

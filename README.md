@@ -137,7 +137,9 @@ Live measured run against the real LLM provider:
 .venv/bin/python -m evals.run --provider gemini --out evals/results/live.json
 ```
 
-Results are written as JSON with action-item recall/precision, owner/date accuracy, scope detection, decision/RAID/status recall, citation coverage, and per-meeting breakdowns. Latest mock result: `evals/results/mock.json`.
+Results are written as JSON with action-item recall/precision, owner/date accuracy, scope detection, decision/RAID/status recall, citation coverage, and per-meeting breakdowns. Latest results: `evals/results/mock.json` and `evals/results/live.json` (Gemini, 10.5 s for 4 meetings).
+
+A one-minute recording shot list is in **[docs/RECORDING.md](docs/RECORDING.md)**.
 
 ---
 

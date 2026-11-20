@@ -145,18 +145,6 @@ Live measured run against the real LLM provider:
 
 Results are written as JSON with action-item recall/precision, owner/date accuracy, scope detection, decision/RAID/status recall, citation coverage, and per-meeting breakdowns. Latest results: `evals/results/mock.json` and `evals/results/live.json` (Gemini, 10.5 s for 4 meetings).
 
-A one-minute recording shot list is kept in `archive/RECORDING.md` (older markdown notes are archived there).
-
-### Demo data ready for recording
-
-Live scenario prepared in project `KAN` (Jira `KAN`, GitHub `Shivaalle/pm-agent`):
-
-- Jira `KAN-7` *Add exponential backoff to auth token refresh* (To Do) and `KAN-8` *Add session store failover health check* (In Progress).
-- GitHub PR **#3** (`KAN-7`) is **open**; PR **#4** (`KAN-8`) is **merged**. Both have Jira keys in the PR body, so code activity links show in **Metrics**.
-- Meeting transcript: `data/demo_meeting.json` — **Sprint 15 Review & Auth Hardening** (13 lines, 2026-11-20). It produces 6 drafts: a decision, an action item with an owner and "tomorrow" date, a RAID risk, a scope change, and two status updates — one for `KAN-7` flagged `discrepancy_detected` with 0.4 confidence because its PR is still open, one for `KAN-8` ready to write `Done` to Jira.
-
-Upload it with **Meetings → JSON file** (or paste its contents), then approve the `KAN-8` status draft: the Jira issue moves to Done. Re-uploading the same file replaces only `waiting` drafts, so you can repeat the shot.
-
 ---
 
 ## 🔄 Replaceable AI provider

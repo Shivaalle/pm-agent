@@ -13,7 +13,9 @@ import hmac
 import json
 import re
 import secrets
+import shutil
 from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
 import aiosqlite
@@ -381,7 +383,27 @@ def verify_password(password: str, stored: Optional[str]) -> bool:
         return False
 
 
+def install_seed_database() -> None:
+    """Copy the bundled demo database when a fresh instance starts empty.
+
+    Free hosts give the container an empty filesystem, so without this the
+    public demo would open with no meetings or drafts. Only runs when
+    ``SEED_DEMO_DB`` is enabled and the target database does not exist yet.
+    """
+    if not settings.SEED_DEMO_DB or settings.APP_ENV == "test":
+        return
+    if settings.DB_PATH.exists():
+        return
+    seed_path = Path(__file__).resolve().parents[1] / "data" / "seed_demo.db"
+    if not seed_path.exists() or seed_path == settings.DB_PATH:
+        return
+    settings.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(seed_path, settings.DB_PATH)
+    logger.info("Seeded demo database from %s", seed_path)
+
+
 async def init_db() -> None:
+    install_seed_database()
     async with get_db() as db:
         db.row_factory = aiosqlite.Row
         await db.execute("PRAGMA journal_mode=WAL")

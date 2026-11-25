@@ -86,6 +86,31 @@ VITE_API_PROXY=http://127.0.0.1:8000 npm --prefix frontend run dev
 
 ---
 
+## ☁️ Free public demo (no real credentials)
+
+A preloaded, credential-free version can be hosted for free on **Render** in about five minutes. It uses `AI_PROVIDER=mock`, deterministic mock Jira/GitHub connectors, and a sanitised snapshot at `data/seed_demo.db`, so the app opens with three meetings, 18 waiting drafts, linked code activity and seeded accounts. **No real keys, no real Jira writes.**
+
+- Push to GitHub, then in Render choose **New → Blueprint** and select this repository. `render.yaml` sets every variable; no secrets are needed.
+- Or create a **Web Service** manually: language **Docker**, build from `Dockerfile`, health check `/health`, free plan.
+- Open `https://<service-name>.onrender.com/app/` and log in with `sarah` / `demo1234` (or any account above).
+
+Important differences from local mode:
+
+- The free instance **sleeps after 15 idle minutes** and takes about a minute to wake — give the panel a heads-up.
+- Its filesystem is temporary. After a restart the database is recreated from `data/seed_demo.db`, so any approvals made by visitors disappear.
+- Because connectors are mocked, approving a draft does **not** touch a real Jira project. The live Jira/GitHub path requires local credentials as described above.
+
+To run the same mode locally without touching your live `.env`:
+
+```bash
+SEED_DEMO_DB=true PM_DB_PATH=/tmp/demo.db APP_ENV=production \
+AI_PROVIDER=mock CONNECTORS_ALLOW_MOCK=true SCHEDULER_ENABLED=false \
+JIRA_BASE_URL= JIRA_EMAIL= JIRA_API_TOKEN= GITHUB_TOKEN= \
+.venv/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+```
+
+---
+
 ## 🔐 Authentication & access control
 
 - `POST /auth/login` returns a Bearer session token; `GET /auth/me` returns the user and their projects.

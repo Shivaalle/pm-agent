@@ -1,0 +1,28 @@
+# Free public demo on Render (Blueprint).
+#
+# No real credentials: AI runs in mock mode, Jira/GitHub connectors use their
+# deterministic mock data, and the app starts from data/seed_demo.db.
+# Every value here is safe to publish.
+services:
+  - type: web
+    name: ai-pm-agent-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: AI_PROVIDER
+        value: mock
+      - key: CONNECTORS_ALLOW_MOCK
+        value: "true"
+      - key: SEED_DEMO_DB
+        value: "true"
+      - key: SCHEDULER_ENABLED
+        value: "false"
+      - key: TEAMS_ENABLED
+        value: "false"
+      - key: DEMO_PASSWORD
+        value: demo1234

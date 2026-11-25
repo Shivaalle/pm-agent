@@ -1,0 +1,29 @@
+.git
+.gitignore
+.venv
+venv
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Never send real credentials into a build context
+.env
+.env.*
+!.env.example
+
+# Local state, logs and build artifacts
+data/*.db
+data/*.db-wal
+data/*.db-shm
+!data/seed_demo.db
+logs/
+*.log
+archive/
+frontend/node_modules/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
+evals/results/
+tests/.test_agent.db*
+docs/*.dtmp
+docs/.*.bkp
+.DS_Store

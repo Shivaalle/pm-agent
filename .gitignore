@@ -30,6 +30,8 @@ Thumbs.db
 # Database
 data/*.db
 data/agent.db
+# Bundled read-only demo snapshot used by public deployments
+!data/seed_demo.db
 
 # Logs
 logs/

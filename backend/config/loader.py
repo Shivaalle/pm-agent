@@ -132,6 +132,11 @@ class Settings:
         self.DB_PATH = Path(db_override) if db_override else ROOT_DIR / "data" / "agent.db"
         self.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
+        # Public demo deployments start from a bundled database so the app opens
+        # populated instead of empty. Off by default: a normal install builds its
+        # own database, and tests must never inherit demo rows.
+        self.SEED_DEMO_DB = _bool(os.getenv("SEED_DEMO_DB"), False)
+
         # Static frontend build
         self.FRONTEND_DIST = ROOT_DIR / "frontend" / "dist"
 
